@@ -1,11 +1,9 @@
 package oophomework.processors;
 
-import oophomework.processors.cachetype.CacheType;
-
 public class ProcessorArm extends Processor {
     private final String architecture = "Arm";
 
-    public ProcessorArm(double frequency, int bitCapacity, CacheType cache) {
+    public ProcessorArm(double frequency, int bitCapacity, String cache) {
         super(frequency, bitCapacity, cache);
         super.architecture = this.architecture;
     }

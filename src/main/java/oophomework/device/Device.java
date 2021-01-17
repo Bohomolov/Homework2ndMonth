@@ -3,6 +3,8 @@ package oophomework.device;
 import oophomework.memory.Memory;
 import oophomework.processors.Processor;
 
+import java.util.Arrays;
+
 public class Device extends oophomework.device.parentdevise.Device {
 
 
@@ -15,11 +17,11 @@ public class Device extends oophomework.device.parentdevise.Device {
     }
 
     public String[] readAll() {
-        String[] temp = memory.memoryCell;
-        for (String s : memory.memoryCell) {
-            s = null;
+        for (String s: memory.memoryCell) {
+            System.out.println(s);
         }
-        return temp;
+        Arrays.fill( memory.memoryCell,null);
+        return memory.memoryCell;
     }
 
     public void dataProcessing() {

@@ -1,12 +1,10 @@
 package oophomework.processors;
 
-import oophomework.processors.cachetype.CacheType;
-
 public class ProcessorX86 extends Processor {
 
     private final String architecture = "x86";
 
-    public ProcessorX86(double frequency, int bitCapacity, CacheType cache) {
+    public ProcessorX86(double frequency, int bitCapacity, String cache) {
         super(frequency, bitCapacity, cache);
         super.architecture = this.architecture;
     }

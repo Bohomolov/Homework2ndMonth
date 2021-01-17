@@ -1,15 +1,25 @@
 package oophomework.processors;
 
-import oophomework.processors.cachetype.CacheType;
-
 public abstract class Processor {
     private final double frequency;
     private final int bitCapacity;
-    private final CacheType cache;
+    private final String cache;
 
     protected String architecture;
 
-    public Processor(double frequency, int bitCapacity, CacheType cache) {
+    public double getFrequency() {
+        return frequency;
+    }
+
+    public int getBitCapacity() {
+        return bitCapacity;
+    }
+
+    public String getCache() {
+        return cache;
+    }
+
+    public Processor(double frequency, int bitCapacity, String cache) {
         this.frequency = frequency;
         this.bitCapacity = bitCapacity;
         this.cache = cache;

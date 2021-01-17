@@ -33,21 +33,28 @@ public class Memory {
         } else if (memoryCell == null){
             throw new IllegalArgumentException(ARRAY_IS_NULL);
         }
-        if (memoryCell[memoryCell.length-1] == null) {
-            memoryCell[memoryCell.length - 1] = value;
-            return true;
-        } else {
-            return false;
+        for (int i = 0; i < memoryCell.length; i++) {
+            if (memoryCell[i] == null) {
+                memoryCell[i] = value;
+                return true;
+            }
         }
+          return false;
     }
-
+    public int getTotalMemory(){
+        return getMemoryInfo().totalMemory;
+    }
+    public double getOccupiedMemory(){
+        return getMemoryInfo().occupiedMemory;
+    }
     public MemoryInfo getMemoryInfo() {
         return new MemoryInfo();
     }
 
+
     private class MemoryInfo {
         private final int totalMemory;
-        private String occupiedMemory;
+        private double occupiedMemory;
 
         private MemoryInfo() {
             totalMemory = getTotalMemory();
@@ -57,7 +64,7 @@ public class Memory {
         @Override
         public String toString() {
             return "Total memory = " + totalMemory + ',' +
-                    " Occupied memory = " + occupiedMemory + ';';
+                    " Occupied memory = " + occupiedMemory + "%;";
         }
 
         private int getTotalMemory(){
@@ -67,7 +74,7 @@ public class Memory {
                 return memoryCell.length;
             }
         }
-        private String getMemoryOccupied() {
+        private double getMemoryOccupied() {
             if (memoryCell != null) {
                 int tmp = 0;
                 int i = 0;
@@ -78,13 +85,12 @@ public class Memory {
                     i++;
                 }
                 if (tmp == 0) {
-                    return occupiedMemory = "100%";
+                    return occupiedMemory = 100;
                 } else {
-                    double percent = 100 - (tmp / (double) memoryCell.length * 100.0);
-                    return occupiedMemory = "" + percent + '%';
+                    return occupiedMemory  = 100 - (tmp / (double) memoryCell.length * 100.0);
                 }
             }else {
-                return MEMORY_IS_EMPTY;
+               return 0;
             }
         }
     }
