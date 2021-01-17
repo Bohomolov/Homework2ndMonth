@@ -11,4 +11,10 @@ public abstract class Device {
         this.processor = processor;
         this.memory = memory;
     }
+    public Processor getProcessor(){
+        return processor;
+    }
+    public Memory getMemory(){
+        return memory;
+    }
 }

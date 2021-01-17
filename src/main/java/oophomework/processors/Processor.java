@@ -7,10 +7,16 @@ public abstract class Processor {
     private final int bitCapacity;
     private final CacheType cache;
 
+    protected String architecture;
+
     public Processor(double frequency, int bitCapacity, CacheType cache) {
         this.frequency = frequency;
         this.bitCapacity = bitCapacity;
         this.cache = cache;
+    }
+
+    public String getArchitecture() {
+        return architecture;
     }
 
     protected abstract String dataProcess(String data);
@@ -19,7 +25,7 @@ public abstract class Processor {
 
     public String getDetails() {
         return "Frequency: " + frequency + ',' +
-                "\nCache: " + cache + ',' +
-                "\nBit capacity: " + bitCapacity + '.';
+                "Cache: " + cache + ',' +
+                "Bit capacity: " + bitCapacity + ';';
     }
 }

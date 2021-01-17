@@ -1,8 +1,7 @@
 package oophomework.memory;
 
 
-import static oophomework.utils.Constants.ARRAY_IS_EMPTY;
-import static oophomework.utils.Constants.STRING_NULL;
+import static oophomework.utils.Constants.*;
 
 public class Memory {
 
@@ -16,7 +15,7 @@ public class Memory {
         if (memoryCell != null) {
             return memoryCell[memoryCell.length - 1];
         } else {
-            return ARRAY_IS_EMPTY;
+            return ARRAY_IS_NULL;
         }
     }
 
@@ -24,7 +23,7 @@ public class Memory {
         if (memoryCell != null) {
             return memoryCell[memoryCell.length - 1] = null;
         } else {
-            return ARRAY_IS_EMPTY;
+            return ARRAY_IS_NULL;
         }
     }
 
@@ -32,7 +31,7 @@ public class Memory {
         if (value == null ){
             throw new IllegalArgumentException(STRING_NULL);
         } else if (memoryCell == null){
-            throw new IllegalArgumentException(ARRAY_IS_EMPTY);
+            throw new IllegalArgumentException(ARRAY_IS_NULL);
         }
         if (memoryCell[memoryCell.length-1] == null) {
             memoryCell[memoryCell.length - 1] = value;
@@ -51,33 +50,42 @@ public class Memory {
         private String occupiedMemory;
 
         private MemoryInfo() {
-            totalMemory = memoryCell.length;
-            occupiedMemory = howMemoryOccupied();
+            totalMemory = getTotalMemory();
+            occupiedMemory = getMemoryOccupied();
         }
 
         @Override
         public String toString() {
-            return "Total memory = " + totalMemory + ';' +
+            return "Total memory = " + totalMemory + ',' +
                     " Occupied memory = " + occupiedMemory + ';';
         }
 
-
-        private String howMemoryOccupied() {
-            int tmp = 0;
-            int i = 0;
-            while (i < memoryCell.length) {
-                if (memoryCell[i] == null) {
-                    tmp++;
+        private int getTotalMemory(){
+            if (memoryCell == null){
+                return 0;
+            }else {
+                return memoryCell.length;
+            }
+        }
+        private String getMemoryOccupied() {
+            if (memoryCell != null) {
+                int tmp = 0;
+                int i = 0;
+                while (i < memoryCell.length) {
+                    if (memoryCell[i] == null) {
+                        tmp++;
+                    }
+                    i++;
                 }
-                i++;
+                if (tmp == 0) {
+                    return occupiedMemory = "100%";
+                } else {
+                    double percent = 100 - (tmp / (double) memoryCell.length * 100.0);
+                    return occupiedMemory = "" + percent + '%';
+                }
+            }else {
+                return MEMORY_IS_EMPTY;
             }
-            if (tmp == 0) {
-                return occupiedMemory = "Occupied memory = 100%";
-            } else {
-                double percent = 100 - (tmp / (double) memoryCell.length * 100.0);
-                return occupiedMemory = "" + percent + '%';
-            }
-
         }
     }
 }

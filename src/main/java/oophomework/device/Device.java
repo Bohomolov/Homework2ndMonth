@@ -5,8 +5,6 @@ import oophomework.processors.Processor;
 
 public class Device extends oophomework.device.parentdevise.Device {
 
-    //1.void dataProcessing() – преобразование всех данных, записанных в памяти, во что преобразовываться?
-    //2.Создать несколько экземпляров класса, это в мейне?
 
     public Device(Processor processor, Memory memory) {
         super(processor, memory);
@@ -16,12 +14,34 @@ public class Device extends oophomework.device.parentdevise.Device {
         memory.memoryCell = data;
     }
 
-    public String[] readAll(){
-        return memory.memoryCell;
+    public String[] readAll() {
+        String[] temp = memory.memoryCell;
+        for (String s : memory.memoryCell) {
+            s = null;
+        }
+        return temp;
+    }
+
+    public void dataProcessing() {
+        for (int i = 0; i < memory.memoryCell.length; i++) {
+            if (memory.memoryCell[i] != null) {
+                String temp = memory.memoryCell[i].toUpperCase();
+                memory.memoryCell[i] = temp;
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "architecture= " + processor.getArchitecture() +
+                ',' + processor.getDetails() +
+                 memory.getMemoryInfo() +
+                '}';
     }
 
     public String getSystemInfo() {
-        return "Processor: " + processor + "\nMemory: " + memory;
+        return "Processor: " + processor.getDetails() + "\nMemory: " + memory.getMemoryInfo();
     }
 
 
