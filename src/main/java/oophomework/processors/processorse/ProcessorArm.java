@@ -1,6 +1,8 @@
-package oophomework.processors;
+package oophomework.processors.processorse;
 
-public class ProcessorArm extends Processor {
+import oophomework.processors.ProcessorBase;
+
+public class ProcessorArm extends ProcessorBase {
     private final String architecture = "Arm";
 
     public ProcessorArm(double frequency, int bitCapacity, String cache) {

@@ -1,14 +1,14 @@
 package oophomework.device;
 
 import oophomework.memory.Memory;
-import oophomework.processors.Processor;
+import oophomework.processors.ProcessorBase;
 
 import java.util.Arrays;
 
 public class Device extends oophomework.device.parentdevise.Device {
 
 
-    public Device(Processor processor, Memory memory) {
+    public Device(ProcessorBase processor, Memory memory) {
         super(processor, memory);
     }
 

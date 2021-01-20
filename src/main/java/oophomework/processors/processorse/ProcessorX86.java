@@ -1,6 +1,8 @@
-package oophomework.processors;
+package oophomework.processors.processorse;
 
-public class ProcessorX86 extends Processor {
+import oophomework.processors.ProcessorBase;
+
+public class ProcessorX86 extends ProcessorBase {
 
     private final String architecture = "x86";
 

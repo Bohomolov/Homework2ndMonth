@@ -1,6 +1,6 @@
 package oophomework.processors;
 
-public abstract class Processor {
+public abstract class ProcessorBase {
     private final double frequency;
     private final int bitCapacity;
     private final String cache;
@@ -19,7 +19,7 @@ public abstract class Processor {
         return cache;
     }
 
-    public Processor(double frequency, int bitCapacity, String cache) {
+    public ProcessorBase(double frequency, int bitCapacity, String cache) {
         this.frequency = frequency;
         this.bitCapacity = bitCapacity;
         this.cache = cache;

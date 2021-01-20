@@ -4,8 +4,8 @@ package oophomework;
 import oophomework.device.Device;
 import oophomework.device.deviceutilse.DeviceUtils;
 import oophomework.memory.Memory;
-import oophomework.processors.ProcessorArm;
-import oophomework.processors.ProcessorX86;
+import oophomework.processors.processorse.ProcessorArm;
+import oophomework.processors.processorse.ProcessorX86;
 
 import static oophomework.utils.Constants.*;
 

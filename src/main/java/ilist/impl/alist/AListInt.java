@@ -69,10 +69,7 @@ public class AListInt implements IList {
         }
         extendArray();
         for (int i = index; i < intArray.length; i++) {
-            int temp = intArray[i];
-            intArray[i] = value;
-            intArray[i + 1] = temp;
-            return true;
+
         }
         return false;
     }
@@ -127,9 +124,17 @@ public class AListInt implements IList {
 
     @Override
     public boolean removeAll(int[] arr) {
-        this.capacity = 10;
-        intArray = new int[capacity];
-        return true;
+        for (int i = 0; i < intArray.length; i++) {
+            for (int j = 0; j < arr.length; j++) {
+                if (intArray[i] == arr[j]) {
+                    intArray[i] = 0;
+                    if (j == arr.length - 1) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private int[] extendArray() {
