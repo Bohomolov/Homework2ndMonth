@@ -4,6 +4,7 @@ public class Constants {
     public final static String ARRAY_IS_NULL = "Array is null.";
     public final static String MEMORY_IS_EMPTY = "Memory is empty";
     public final static String STRING_NULL = "String equals null.";
+    public final static String STRING_IS_EMPTY = "String is empty.";
     public final static String INCORRECT_ARCH = "Incorrect processor architecture.";
     public final static String INCORRECT_PARAMETER = "Incorrect processor parameter.";
     public final static String INCORRECT_VALUE = "Incorrect processor value.";

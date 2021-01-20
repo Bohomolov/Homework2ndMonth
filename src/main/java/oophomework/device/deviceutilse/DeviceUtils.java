@@ -23,6 +23,8 @@ public class DeviceUtils {
     public Device[] filterByArch(Device[] devices, String arch) {
         if (isCorrectArch(arch)) {
             throw new IllegalArgumentException(Constants.INCORRECT_ARCH);
+        } else if (arch.trim().equals("")) {
+            throw new IllegalArgumentException(Constants.STRING_IS_EMPTY);
         } else if (devices == null) {
             throw new IllegalArgumentException(Constants.ARRAY_IS_NULL);
         }

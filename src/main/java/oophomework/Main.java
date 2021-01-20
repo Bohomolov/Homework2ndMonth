@@ -7,8 +7,6 @@ import oophomework.memory.Memory;
 import oophomework.processors.ProcessorArm;
 import oophomework.processors.ProcessorX86;
 
-import java.util.Arrays;
-
 import static oophomework.utils.Constants.*;
 
 public class Main {
