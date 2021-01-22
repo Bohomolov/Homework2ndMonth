@@ -7,10 +7,12 @@ import java.util.Arrays;
 public class AListInt implements IList {
 
     private int[] intArray;
-    private int capacity;
+    private static final int INITIAL_CAPACITY = 10;
+    private int capacity = INITIAL_CAPACITY;
+    private int size;
 
     public AListInt() {
-        capacity = 10;
+        size = 0;
         intArray = new int[capacity];
     }
 
@@ -20,19 +22,25 @@ public class AListInt implements IList {
     }
 
     public AListInt(int[] ints) {
-        this.capacity = ints.length;
-        this.intArray = ints;
+        capacity = ints.length;
+        intArray = new int[capacity];
+        for (int i = 0; i < ints.length; i++) {
+            intArray[i] = ints[i];
+        }
     }
 
     @Override
     public void clear() {
-        Arrays.fill(intArray, 0);
+        for (int i = 0; i < intArray.length; i++) {
+            intArray[i] = 0;
+        }
+        size = 0;
         intArray = new int[capacity];
     }
 
     @Override
     public int size() {
-        return intArray.length;
+        return size;
     }
 
     @Override
@@ -42,20 +50,15 @@ public class AListInt implements IList {
 
     @Override
     public boolean add(int value) {
-        int flag = 0;
-        for (int i = 0; i < intArray.length; i++) {
-            if (intArray[i] == 0) {
-                intArray[i] = value;
-                flag++;
-                return true;
-            }
-        }
-        if (flag == 0) {
-            extendArray();
-            intArray[intArray.length - 1] = value;
+        if (size < intArray.length) {
+            intArray[size] = value;
+            size++;
             return true;
         }
-        return false;
+        extendArray();
+        intArray[size] = value;
+        size++;
+        return true;
     }
 
     @Override
@@ -65,32 +68,49 @@ public class AListInt implements IList {
         }
         if (intArray[index] == 0) {
             intArray[index] = value;
+            size++;
             return true;
         }
         extendArray();
-        for (int i = index; i < intArray.length; i++) {
-
+        for (int i = size; i > index; i--) {
+            intArray[i] = intArray[i - 1];
         }
-        return false;
+        intArray[index] = value;
+        size++;
+        return true;
     }
 
     @Override
     public int remove(int number) {
-        int removeElement = 0;
-        for (int i = 0; i < intArray.length; i++) {
+        int returnNumber = 0;
+        int count = 0;
+        for (int i = 0; i < size; i++) {
             if (intArray[i] == number) {
-                removeElement = intArray[i];
+                returnNumber = number;
                 intArray[i] = 0;
-                return removeElement;
+                continue;
             }
+            intArray[count] = intArray[i];
+            count++;
         }
-        return removeElement;
+
+        size--;
+        return returnNumber;
     }
 
     @Override
     public int removeByIndex(int index) {
         int removeElement = intArray[index];
         intArray[index] = 0;
+        int count = 0;
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                continue;
+            }
+            intArray[count] = intArray[i];
+            count++;
+        }
+        size--;
         return removeElement;
     }
 
@@ -112,14 +132,23 @@ public class AListInt implements IList {
 
     @Override
     public void print() {
-        for (int i : intArray) {
-            System.out.print("[" + i + "]");
+        String output = "";
+        for (int i = 0; i < size; i++) {
+            output += intArray[i];
+            if (i < size - 1) {
+                output += ", ";
+            }
         }
+        System.out.println('[' + output + ']');
     }
 
     @Override
     public int[] toArray() {
-        return intArray;
+        int[] output = new int[size];
+        for (int i = 0; i < size; i++) {
+            output[i] = intArray[i];
+        }
+        return output;
     }
 
     @Override
@@ -141,7 +170,9 @@ public class AListInt implements IList {
         int[] temp = intArray;
         this.capacity += 1;
         intArray = new int[capacity];
-        System.arraycopy(temp, 0, intArray, 0, temp.length);
+        for (int i = 0; i < capacity - 1; i++) {
+            intArray[i] = temp[i];
+        }
         return intArray;
     }
 
