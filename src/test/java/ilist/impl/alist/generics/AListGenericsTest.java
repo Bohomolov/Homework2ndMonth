@@ -1,19 +1,65 @@
-package ilist.impl.alist;
+package ilist.impl.alist.generics;
 
-import ilist.interfaces.IList;
 import ilist.constantslist.ListConstants;
+import ilist.impl.alist.AListInt;
+import ilist.interfaces.IList;
+import ilist.interfaces.IListGenerics;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-class AListIntTest {
+class AListGenericsTest {
+    private static class Person {
+        private final int id;
+        private final String name;
+
+        public Person(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "Person{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Person person = (Person) o;
+            return id == person.id &&
+                    Objects.equals(name, person.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name);
+        }
+    }
+
+    @Test
+    public void test() {
+        Person person0 = new Person(0, "Xz000");
+        Person person1 = new Person(1, "Xz");
+        Person person2 = new Person(2, "XX");
+        Person person3 = new Person(3, "XXx");
+        Person person4 = new Person(4, "XXxEE");
+        Person person5 = new Person(5, "XXxEE");
+        Person person6 = new Person(6, "XXxEE");
+    }
 
     static Stream<Arguments> clearTest() {
 
@@ -25,11 +71,21 @@ class AListIntTest {
     @ParameterizedTest(name = "Clear test. Data input: {0}, {1}")
     @MethodSource("clearTest")
     public void clearTestMain(int expected) {
-        IList myList = new AListInt();
-        myList.add(1);
-        myList.add(2);
-        myList.add(3);
-        myList.add(4);
+        Person person0 = new Person(0, "Xz000");
+        Person person1 = new Person(1, "Xz");
+        Person person2 = new Person(2, "XX");
+        Person person3 = new Person(3, "XXx");
+        Person person4 = new Person(4, "XXxEE");
+        Person person5 = new Person(5, "XXxEE");
+        Person person6 = new Person(6, "XXxEE");
+        IListGenerics<Person> myList = new AListGenerics<>();
+        myList.add(person0);
+        myList.add(person1);
+        myList.add(person2);
+        myList.add(person3);
+        myList.add(person4);
+        myList.add(person5);
+        myList.add(person6);
         myList.clear();
         int actual = myList.size();
         assertEquals(expected, actual);
@@ -37,34 +93,41 @@ class AListIntTest {
 
     //============================= Size ========================
     static Stream<Arguments> sizeTest() {
-        IList myList1 = new AListInt();
-        IList myList2 = new AListInt();
-        IList myList3 = new AListInt();
-        IList myList4 = new AListInt();
+        Person person0 = new Person(0, "Xz000");
+        Person person1 = new Person(1, "Xz");
+        Person person2 = new Person(2, "XX");
+        Person person3 = new Person(3, "XXx");
+        Person person4 = new Person(4, "XXxEE");
+        Person person5 = new Person(5, "XXxEE");
+        Person person6 = new Person(6, "XXxEE");
+        IListGenerics<Person> myList = new AListGenerics<>();
 
-        myList1.add(1);
-        myList1.add(2);
-        myList1.add(3);
-        myList1.add(4);
-        myList1.add(1);
-        myList1.add(5);
-        myList1.add(6);
+        myList.add(person0);
+        myList.add(person1);
+        myList.add(person2);
+        myList.add(person3);
+        myList.add(person4);
+        myList.add(person5);
+        myList.add(person6);
 
-        myList3.add(1);
-        myList3.add(2);
-        myList3.add(3);
-        myList3.add(4);
-        myList3.add(5);
-        myList3.add(6);
-        myList3.add(7);
-        myList3.add(8);
+        IListGenerics<Person> myList2 = new AListGenerics<>();
 
-        myList4.add(1);
+        myList2.add(person0);
+        myList2.add(person0);
+        myList2.add(person0);
+        myList2.add(person0);
+        myList2.add(person0);
+
+        IListGenerics<Person> myList3 = new AListGenerics<>();
+
+        IListGenerics<Person> myList4 = new AListGenerics<>();
+        myList4.add(person0);
+
 
         return Stream.of(
-                Arguments.arguments(myList1, 7),
-                Arguments.arguments(myList2, 0),
-                Arguments.arguments(myList3, 8),
+                Arguments.arguments(myList, 7),
+                Arguments.arguments(myList2, 5),
+                Arguments.arguments(myList3, 0),
                 Arguments.arguments(myList4, 1)
         );
     }
@@ -78,44 +141,46 @@ class AListIntTest {
 
     //================================= GeT =====================
     static Stream<Arguments> getTest() {
-        IList myList1 = new AListInt();
-        IList myList2 = new AListInt();
-        IList myList3 = new AListInt();
-        IList myList4 = new AListInt();
+        Person person0 = new Person(0, "Xz000");
+        Person person1 = new Person(1, "Xz");
+        Person person2 = new Person(2, "XX");
+        Person person3 = new Person(3, "XXx");
+        Person person4 = new Person(4, "XXxEE");
+        Person person5 = new Person(5, "XXxEE");
+        Person person6 = new Person(6, "XXxEE");
+        IListGenerics<Person> myList = new AListGenerics<>();
 
-        myList1.add(1);
-        myList1.add(2);
-        myList1.add(3);
-        myList1.add(4);
-        myList1.add(1);
-        myList1.add(5);
-        myList1.add(6);
+        myList.add(person0);
+        myList.add(person1);
+        myList.add(person2);
+        myList.add(person3);
+        myList.add(person4);
+        myList.add(person4);
+        myList.add(person5);
 
-        myList3.add(1);
-        myList3.add(2);
-        myList3.add(3);
-        myList3.add(4);
-        myList3.add(5);
-        myList3.add(6);
-        myList3.add(7);
-        myList3.add(8);
+        IListGenerics<Person> myList2 = new AListGenerics<>();
 
-        myList4.add(1);
+        IListGenerics<Person> myList3 = new AListGenerics<>();
+        myList3.add(person0);
+        myList3.add(person0);
+        myList3.add(person0);
 
+        IListGenerics<Person> myList4 = new AListGenerics<>();
+        myList4.add(person5);
         return Stream.of(
-                Arguments.arguments(myList1, 6, 6),
-                Arguments.arguments(myList1, 4, 1),
-                Arguments.arguments(myList1, 6, 6),
+                Arguments.arguments(myList, 6, person5),
+                Arguments.arguments(myList, 4, person4),
+                Arguments.arguments(myList, 5, person4),
                 Arguments.arguments(myList2, 0, 0),
-                Arguments.arguments(myList3, 2, 3),
-                Arguments.arguments(myList4, 0, 1)
+                Arguments.arguments(myList3, 2, person0),
+                Arguments.arguments(myList4, 0, person5)
         );
     }
 
     @ParameterizedTest(name = "Get test. Data input: {0}, {1}")
     @MethodSource("getTest")
-    public void getTestMain(IList iList, int index, int expected) {
-        int actual = iList.get(index);
+    public void getTestMain(IList iList, int index, Object expected) {
+        Object actual = iList.get(index);
         assertEquals(expected, actual);
     }
 

@@ -1,4 +1,4 @@
-package ilist.impl.alist.iterator;
+package ilist.impl.alist.generics.iterator;
 
 import java.util.Iterator;
 

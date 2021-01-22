@@ -1,6 +1,6 @@
 package ilist.impl;
 
-import ilist.IList;
+import ilist.interfaces.IList;
 
 public class LList implements IList {
     @Override
