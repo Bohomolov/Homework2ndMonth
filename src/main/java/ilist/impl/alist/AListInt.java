@@ -1,13 +1,12 @@
 package ilist.impl.alist;
 
 import ilist.IList;
+import ilist.constantslist.ListConstants;
 
-import java.util.Arrays;
 
 public class AListInt implements IList {
-
-    private int[] intArray;
     private static final int INITIAL_CAPACITY = 10;
+    private int[] intArray;
     private int capacity = INITIAL_CAPACITY;
     private int size;
 
@@ -31,9 +30,6 @@ public class AListInt implements IList {
 
     @Override
     public void clear() {
-        for (int i = 0; i < intArray.length; i++) {
-            intArray[i] = 0;
-        }
         size = 0;
         intArray = new int[capacity];
     }
@@ -45,6 +41,9 @@ public class AListInt implements IList {
 
     @Override
     public int get(int index) {
+        if (index < 0 || index > size) {
+            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+        }
         return intArray[index];
     }
 
@@ -63,15 +62,12 @@ public class AListInt implements IList {
 
     @Override
     public boolean add(int index, int value) {
-        if (index < 0 || index > intArray.length) {
-            throw new IllegalArgumentException();
+        if (index < 0 || index > size) {
+            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
         }
-        if (intArray[index] == 0) {
-            intArray[index] = value;
-            size++;
-            return true;
+        if (size == intArray.length) {
+            extendArray();
         }
-        extendArray();
         for (int i = size; i > index; i--) {
             intArray[i] = intArray[i - 1];
         }
@@ -84,40 +80,43 @@ public class AListInt implements IList {
     public int remove(int number) {
         int returnNumber = 0;
         int count = 0;
+        boolean flag = true;
         for (int i = 0; i < size; i++) {
-            if (intArray[i] == number) {
+            if (flag && intArray[i] == number) {
                 returnNumber = number;
-                intArray[i] = 0;
+                flag = false;
                 continue;
             }
             intArray[count] = intArray[i];
             count++;
         }
-
         size--;
         return returnNumber;
     }
 
     @Override
     public int removeByIndex(int index) {
-        int removeElement = intArray[index];
-        intArray[index] = 0;
+        if (index < 0 || index > size) {
+            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+        }
+        int output = 0;
         int count = 0;
         for (int i = 0; i < size; i++) {
             if (i == index) {
+                output = intArray[index];
                 continue;
             }
             intArray[count] = intArray[i];
             count++;
         }
         size--;
-        return removeElement;
+        return output;
     }
 
     @Override
     public boolean contains(int value) {
-        for (int i : intArray) {
-            if (i == value) {
+        for (int i = 0; i < size; i++) {
+            if (intArray[i] == value) {
                 return true;
             }
         }
@@ -126,6 +125,9 @@ public class AListInt implements IList {
 
     @Override
     public boolean set(int index, int value) {
+        if (index < 0 || index > size) {
+            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+        }
         intArray[index] = value;
         return true;
     }
@@ -153,18 +155,23 @@ public class AListInt implements IList {
 
     @Override
     public boolean removeAll(int[] arr) {
-        for (int i = 0; i < intArray.length; i++) {
-            for (int j = 0; j < arr.length; j++) {
-                if (intArray[i] == arr[j]) {
-                    intArray[i] = 0;
-                    if (j == arr.length - 1) {
-                        return true;
-                    }
-                }
-            }
+        if (arr == null) {
+            throw new IllegalArgumentException(ListConstants.ARRAY_IS_EMPTY);
         }
-        return false;
+        for (int i = 0; i < arr.length; i++) {
+            int count = 0;
+            for (int j = 0; j < size; j++) {
+                if (intArray[j] == arr[i]) {
+                    continue;
+                }
+                intArray[count] = intArray[j];
+                count++;
+            }
+            size--;
+        }
+        return true;
     }
+
 
     private int[] extendArray() {
         int[] temp = intArray;
