@@ -229,16 +229,15 @@ class AListIntTest {
                 Arguments.arguments(myList1, 1, 1),
                 Arguments.arguments(myList1, 3, 3),
                 Arguments.arguments(myList1, 3, 3),
-                Arguments.arguments(myList1, 3, 0),
                 Arguments.arguments(myList2, 5, 5),
                 Arguments.arguments(myList2, 3, 3),
                 Arguments.arguments(myList2, 0, 0),
-                Arguments.arguments(myList2, 1, 1),
-                Arguments.arguments(myList2, 1, 0)
+                Arguments.arguments(myList2, 1, 1)
+
         );
     }
 
-    @ParameterizedTest(name = "Remove index test. Data input: {0}, {1}, {2}, {3}")
+    @ParameterizedTest(name = "Remove test. Data input: {0}, {1}, {2}, {3}")
     @MethodSource("removeTest")
     public void removeTestMain(IList iList, int value, int expected) {
         int actual = iList.remove(value);

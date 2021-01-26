@@ -93,6 +93,9 @@ public class AListInt implements IList {
             count++;
         }
         size--;
+        if (flag) {
+            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT);
+        }
         return returnNumber;
     }
 
@@ -103,13 +106,18 @@ public class AListInt implements IList {
         }
         int output = 0;
         int count = 0;
+        boolean flag = true;
         for (int i = 0; i < size; i++) {
             if (i == index) {
                 output = intArray[index];
+                flag = false;
                 continue;
             }
             intArray[count] = intArray[i];
             count++;
+        }
+        if (flag) {
+            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT);
         }
         size--;
         return output;
