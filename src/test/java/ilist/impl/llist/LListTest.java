@@ -36,7 +36,6 @@ class LListTest {
         System.out.println(myList.contains(0));
         System.out.println(myList.contains(3));
 
-        System.out.println(myList.removeByIndex(1));
 
         myList.print();
        int[] o = myList.toArray();
