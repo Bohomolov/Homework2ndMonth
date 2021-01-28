@@ -18,25 +18,31 @@ public class LList implements IList {
     @Override
     public void clear() {
         size = 0;
-        for (Node node = root; node != null; ) {
-            Node next = node.next;
-            next.value = 0;
-            node.next = null;
-            node = next;
+        if (root == null) {
+            return;
         }
+        clear(root.next);
         root = null;
+    }
+
+    private void clear(Node node) {
+        if (node.next == null) {
+            return;
+        }
+        clear(node.next);
+        node.next = null;
     }
 
     @Override
     public int size() {
         return size;
     }
-
     @Override
     public int get(int index) {
         if (index < 0 || index > size) {
             throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
         }
+
         Node node = root;
         int innerIndex = 0;
         while (node != null) {
@@ -48,7 +54,6 @@ public class LList implements IList {
         }
         return 0;
     }
-
     @Override
     public boolean add(int value) {
         if (root == null) {
@@ -72,9 +77,9 @@ public class LList implements IList {
     @Override
     public boolean add(int index, int value) {
         if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -115,7 +120,7 @@ public class LList implements IList {
     @Override
     public boolean set(int index, int value) {
         if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+            return false;
         }
         Node node = root;
         int innerIndex = 0;

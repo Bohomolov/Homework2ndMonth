@@ -7,6 +7,7 @@ public class AListGenerics<E> implements IListGenerics<E> {
     private static final int INITIAL_CAPACITY = 10;
     private Object[] objects;
     private int capacity = INITIAL_CAPACITY;
+    private final double COEFICIENT = 1.5;
     private int size;
 
     public AListGenerics() {
@@ -42,22 +43,12 @@ public class AListGenerics<E> implements IListGenerics<E> {
 
     @Override
     public E get(int index) {
-        if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
-        }
+        isCorrectIndex(index);
         return (E) objects[index];
     }
 
     @Override
     public boolean add(E value) {
-        if (value == null) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT);
-        }
-        if (size < objects.length) {
-            objects[size] = value;
-            size++;
-            return true;
-        }
         extendArray();
         objects[size] = value;
         size++;
@@ -66,12 +57,10 @@ public class AListGenerics<E> implements IListGenerics<E> {
 
     @Override
     public boolean add(int index, E value) {
-        if (index < 0 || index > size || value == null) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+        if (index < 0 || index > size) {
+            return false;
         }
-        if (size == objects.length) {
-            extendArray();
-        }
+        extendArray();
         for (int i = size; i > index; i--) {
             objects[i] = objects[i - 1];
         }
@@ -82,66 +71,28 @@ public class AListGenerics<E> implements IListGenerics<E> {
 
     @Override
     public E remove(E value) {
-        if (value == null) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT);
-        }
-        E returnObject = null;
-        int count = 0;
-        boolean flag = true;
-        for (int i = 0; i < size; i++) {
-            if (flag && objects[i].equals(value)) {
-                returnObject = value;
-                flag = false;
-                continue;
-            }
-            objects[count] = objects[i];
-            count++;
-        }
-        size--;
-        if (flag) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT);
-        }
-        return (E) returnObject;
+        return removeByIndex(findIndex(value));
     }
 
     @Override
     public E removeByIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
-        }
-        E output = null;
-        int count = 0;
-        boolean flag = true;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                output = (E) objects[index];
-                flag = false;
-                continue;
-            }
-            objects[count] = objects[i];
-            count++;
-        }
-        if (flag) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT);
-        }
+        isCorrectIndex(index);
         size--;
-        return output;
+        for (int i = index; i < size; i++) {
+            objects[i] = objects[i + 1];
+        }
+        return (E) objects[index];
     }
 
     @Override
     public boolean contains(E value) {
-        for (int i = 0; i < size; i++) {
-            if (objects[i].equals(value)) {
-                return true;
-            }
-        }
-        return false;
+        return findIndex(value) >= 0;
     }
 
     @Override
     public boolean set(int index, E value) {
         if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+            return false;
         }
         objects[index] = value;
         return true;
@@ -149,14 +100,7 @@ public class AListGenerics<E> implements IListGenerics<E> {
 
     @Override
     public void print() {
-        String output = "";
-        for (int i = 0; i < size; i++) {
-            output += objects[i];
-            if (i < size - 1) {
-                output += ", ";
-            }
-        }
-        System.out.println('[' + output + ']');
+        System.out.println(toString());
     }
 
     @Override
@@ -171,37 +115,41 @@ public class AListGenerics<E> implements IListGenerics<E> {
     @Override
     public boolean removeAll(E[] arr) {
         if (arr == null) {
-            throw new IllegalArgumentException(ListConstants.ARRAY_IS_EMPTY);
+            return false;
         }
         for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == null) {
-                throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT);
+            int index = findIndex(arr[i]);
+            if (index < 0) {
+                continue;
             }
-            boolean flag = true;
-            int count = 0;
-            for (int j = 0; j < size; j++) {
-                if (objects[j].equals(arr[i])) {
-                    flag = false;
-                    continue;
-                }
-                objects[count] = objects[j];
-                count++;
-            }
-
-            size--;
-
+            removeByIndex(index);
         }
-
         return true;
     }
 
-    private Object[] extendArray() {
-        Object[] temp = objects;
-        this.capacity += 1;
-        objects = new Object[capacity];
-        for (int i = 0; i < capacity - 1; i++) {
-            objects[i] = temp[i];
+    private void extendArray() {
+        if (size == objects.length - 1) {
+            Object[] temp = objects;
+            capacity *= COEFICIENT;
+            objects = new Object[capacity];
+            for (int i = 0; i < size; i++) {
+                objects[i] = temp[i];
+            }
         }
-        return objects;
+    }
+
+    private int findIndex(E value) {
+        for (int i = 0; i < size; i++) {
+            if (objects[i].equals(value)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void isCorrectIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+        }
     }
 }

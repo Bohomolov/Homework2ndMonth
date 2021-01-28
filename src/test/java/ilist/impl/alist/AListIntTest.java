@@ -140,74 +140,52 @@ class AListIntTest {
     //===========================================ADD=====================
     static Stream<Arguments> addTest() {
         IList myList1 = new AListInt();
-        IList myList2 = new AListInt();
-        IList myList3 = new AListInt();
-        IList myList4 = new AListInt();
 
         return Stream.of(
-                Arguments.arguments(myList1, 1, true),
-                Arguments.arguments(myList2, 2, true),
-                Arguments.arguments(myList3, 3, true),
-                Arguments.arguments(myList4, 4, true)
+                Arguments.arguments(myList1, 1, true, new int[]{1}),
+                Arguments.arguments(myList1, 2, true, new int[]{1, 2}),
+                Arguments.arguments(myList1, 3, true, new int[]{1, 2, 3}),
+                Arguments.arguments(myList1, 6, true, new int[]{1, 2, 3, 6}),
+                Arguments.arguments(myList1, 0, true, new int[]{1, 2, 3, 6, 0}),
+                Arguments.arguments(myList1, -8, true, new int[]{1, 2, 3, 6, 0, -8})
+
         );
     }
 
     @ParameterizedTest(name = "Add test. Data input: {0}, {1} , {2}")
     @MethodSource("addTest")
-    public void addTestMain(IList iList, int value, boolean expected) {
+    public void addTestMain(IList iList, int value, boolean expected, int[] expectedInt) {
         boolean actual = iList.add(value);
-        int actualInt = iList.remove(value);
-        int expectedInt = value;
+        int[] actualInt = iList.toArray();
         assertEquals(expected, actual);
-        assertEquals(expectedInt, actualInt);
+        assertArrayEquals(expectedInt, actualInt);
     }
 
     //============================ Add index =======================
     static Stream<Arguments> addIndexTest() {
         IList myList1 = new AListInt();
         myList1.add(1);
-        IList myList2 = new AListInt();
-        myList2.add(0);
-        myList2.add(1);
-        myList2.add(2);
-        myList2.add(3);
-        myList2.add(4);
-        myList2.add(5);
+        myList1.add(2);
+        myList1.add(3);
+        myList1.add(4);
 
         return Stream.of(
-                Arguments.arguments(myList1, 0, 1, true),
-                Arguments.arguments(myList1, 1, 2, true),
-                Arguments.arguments(myList2, 5, 3, true),
-                Arguments.arguments(myList2, 3, 4, true)
+                Arguments.arguments(myList1, 0, 10, true, new int[]{10, 1, 2, 3, 4}),
+                Arguments.arguments(myList1, 2, 12, true, new int[]{10, 1, 12, 2, 3, 4}),
+                Arguments.arguments(myList1, 6, 5, true, new int[]{10, 1, 12, 2, 3, 4, 5}),
+                Arguments.arguments(myList1, -1, 10, false, new int[]{10, 1, 12, 2, 3, 4, 5}),
+                Arguments.arguments(myList1, 100, 100, false, new int[]{10, 1, 12, 2, 3, 4, 5})
+
         );
     }
 
     @ParameterizedTest(name = "Add index test. Data input: {0}, {1}, {2}, {3}")
     @MethodSource("addIndexTest")
-    public void addIndexTestMain(IList iList, int index, int value, boolean expected) {
+    public void addIndexTestMain(IList iList, int index, int value, boolean expected, int[] expectedInt) {
         boolean actual = iList.add(index, value);
-        int actualInt = iList.get(index);
-        int expectedInt = value;
+        int[] actualInt = iList.toArray();
         assertEquals(expected, actual);
-        assertEquals(expectedInt, actualInt);
-    }
-
-    @Test
-    public void addByIndexExceptionsNegativeIndex() {
-        IList myList = new AListInt();
-        myList.add(1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.add(-1, 6);
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
-    @Test
-    public void addTestExceptionsExtraIndex() {
-        IList myList = new AListInt();
-        myList.add(1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.add(5, 6);
-        }, ListConstants.INCORRECT_ARGUMENT);
+        assertArrayEquals(expectedInt, actualInt);
     }
 
     //============================ Remove =========================
@@ -217,31 +195,30 @@ class AListIntTest {
         myList1.add(2);
         myList1.add(3);
         myList1.add(3);
-        IList myList2 = new AListInt();
-        myList2.add(0);
-        myList2.add(1);
-        myList2.add(2);
-        myList2.add(3);
-        myList2.add(4);
-        myList2.add(5);
+        myList1.add(4);
+        myList1.add(5);
+        myList1.add(-5);
+        myList1.add(-15);
 
         return Stream.of(
-                Arguments.arguments(myList1, 1, 1),
-                Arguments.arguments(myList1, 3, 3),
-                Arguments.arguments(myList1, 3, 3),
-                Arguments.arguments(myList2, 5, 5),
-                Arguments.arguments(myList2, 3, 3),
-                Arguments.arguments(myList2, 0, 0),
-                Arguments.arguments(myList2, 1, 1)
+                Arguments.arguments(myList1, 1, new int[]{2, 3, 3, 4, 5, -5, -15}),
+                Arguments.arguments(myList1, -15, new int[]{2, 3, 3, 4, 5, -5}),
+                Arguments.arguments(myList1, 3, new int[]{2, 3, 4, 5, -5}),
+                Arguments.arguments(myList1, 5, new int[]{2, 3, 4, -5}),
+                Arguments.arguments(myList1, -5, new int[]{2, 3, 4}),
+                Arguments.arguments(myList1, 3, new int[]{2, 4}),
+                Arguments.arguments(myList1, 4, new int[]{2}),
+                Arguments.arguments(myList1, 2, new int[]{})
 
         );
     }
 
-    @ParameterizedTest(name = "Remove test. Data input: {0}, {1}, {2}, {3}")
+    @ParameterizedTest(name = "Remove test. Data input: {0}, {1}, {2}")
     @MethodSource("removeTest")
-    public void removeTestMain(IList iList, int value, int expected) {
-        int actual = iList.remove(value);
-        assertEquals(expected, actual);
+    public void removeTestMain(IList iList, int value, int[] expected) {
+        iList.remove(value);
+        int[] actual = iList.toArray();
+        assertArrayEquals(expected, actual);
     }
 
     //============================= Remove by Index ======================================
@@ -251,44 +228,30 @@ class AListIntTest {
         myList1.add(2);
         myList1.add(3);
         myList1.add(3);
-        IList myList2 = new AListInt();
-        myList2.add(0);
-        myList2.add(1);
-        myList2.add(2);
-        myList2.add(3);
-        myList2.add(4);
-        myList2.add(5);
-        IList myList3 = new AListInt();
-        myList3.add(0);
-        myList3.add(10);
-        myList3.add(20);
-        myList3.add(30);
-        myList3.add(40);
-        myList3.add(50);
+        myList1.add(4);
+        myList1.add(5);
+        myList1.add(-5);
+        myList1.add(-90);
 
         return Stream.of(
 
-                Arguments.arguments(myList1, 3, 3),
-                Arguments.arguments(myList1, 2, 3),
-                Arguments.arguments(myList1, 1, 2),
-                Arguments.arguments(myList1, 0, 1),
-                Arguments.arguments(myList2, 0, 0),
-                Arguments.arguments(myList2, 0, 1),
-                Arguments.arguments(myList2, 0, 2),
-                Arguments.arguments(myList2, 0, 3),
-                Arguments.arguments(myList2, 0, 4),
-                Arguments.arguments(myList3, 3, 30),
-                Arguments.arguments(myList3, 1, 10),
-                Arguments.arguments(myList3, 3, 50)
-
+                Arguments.arguments(myList1, 3, new int[]{1, 2, 3, 4, 5, -5, -90}),
+                Arguments.arguments(myList1, 6, new int[]{1, 2, 3, 4, 5, -5}),
+                Arguments.arguments(myList1, 3, new int[]{1, 2, 3, 5, -5}),
+                Arguments.arguments(myList1, 0, new int[]{2, 3, 5, -5}),
+                Arguments.arguments(myList1, 0, new int[]{3, 5, -5}),
+                Arguments.arguments(myList1, 2, new int[]{3, 5}),
+                Arguments.arguments(myList1, 1, new int[]{3}),
+                Arguments.arguments(myList1, 0, new int[]{})
         );
     }
 
     @ParameterizedTest(name = "Remove index test. Data input: {0}, {1}, {2}")
     @MethodSource("removeByIndexTest")
-    public void removeByIndexTestMain(IList iList, int index, int expected) {
-        int actual = iList.removeByIndex(index);
-        assertEquals(expected, actual);
+    public void removeByIndexTestMain(IList iList, int index, int[] expected) {
+        iList.removeByIndex(index);
+        int[] actual = iList.toArray();
+        assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -370,24 +333,6 @@ class AListIntTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    public void setTestExceptionsNegativeIndex() {
-        IList myList = new AListInt();
-        myList.add(1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.set(-5, 5);
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
-    @Test
-    public void setTestExceptionsExtraIndex() {
-        IList myList = new AListInt();
-        myList.add(1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.set(5, 5);
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
     //================================= To array ================================================
     static Stream<Arguments> toArrayTest() {
         IList myList1 = new AListInt();
@@ -432,52 +377,57 @@ class AListIntTest {
     //============================= Remove All ===========================================
     static Stream<Arguments> removeAllTest() {
         IList myList1 = new AListInt();
-        IList myList2 = new AListInt();
-        IList myList3 = new AListInt();
-        IList myList4 = new AListInt();
-
-        myList4.add(2);
-        myList4.add(2);
-        myList4.add(2);
-
         myList1.add(1);
         myList1.add(2);
         myList1.add(3);
         myList1.add(4);
         myList1.add(5);
         myList1.add(6);
+        myList1.add(7);
         myList1.add(8);
 
-        myList3.add(-9);
+        IList myList2 = new AListInt();
+        myList2.add(0);
+        myList2.add(1);
+        myList2.add(2);
+        myList2.add(3);
+        myList2.add(4);
+        myList2.add(5);
+        myList2.add(6);
+        myList2.add(7);
+        myList2.add(8);
+        myList2.add(9);
+        myList2.add(10);
+        myList2.add(11);
+        myList2.add(12);
+        myList2.add(12);
+
+        IList myList3 = new AListInt();
         myList3.add(0);
-        myList3.add(-90);
-        myList3.add(10);
-        myList3.add(15);
-        myList3.add(42);
-        myList3.add(0);
+        myList3.add(1);
+        myList3.add(2);
+        myList3.add(3);
+
+        IList myList4 = new AListInt();
+
+        IList myList5 = new AListInt();
+        myList5.add(1);
+        myList5.add(-1);
         return Stream.of(
-                Arguments.arguments(myList1, new int[]{1, 2, 5, 8}, new int[]{3, 4, 6}),
-                Arguments.arguments(myList2, new int[]{}, new int[]{}),
-                Arguments.arguments(myList4, new int[]{2, 2, 2}, new int[]{}),
-                Arguments.arguments(myList3, new int[]{0, 0, 10, -90}, new int[]{-9, 15, 42})
+                Arguments.arguments(myList1, new int[]{1, 2, 5, 8}, new int[]{3, 4, 6, 7}, true),
+                Arguments.arguments(myList2, new int[]{1, 3, 5, 8, 10, 12}, new int[]{0, 2, 4, 6, 7, 9, 11, 12}, true),
+                Arguments.arguments(myList3, new int[]{1, 3, 5}, new int[]{0, 2}, true),
+                Arguments.arguments(myList4, new int[]{}, new int[]{}, true),
+                Arguments.arguments(myList5, null, new int[]{1,-1}, false)
         );
     }
 
     @ParameterizedTest(name = "Remove all test. Data input: {0}, {1}, {2}")
     @MethodSource("removeAllTest")
-    public void removeAllTestMain(IList iList, int[] arr, int[] expected) {
-        iList.removeAll(arr);
+    public void removeAllTestMain(IList iList, int[] arr, int[] expected, boolean expectedb) {
+        boolean actualb = iList.removeAll(arr);
         int[] actual = iList.toArray();
+        assertEquals(expectedb, actualb);
         assertArrayEquals(expected, actual);
     }
-
-    @Test
-    public void removeAllTestExceptionsNull() {
-        IList myList = new AListInt();
-        myList.add(1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.removeAll(null);
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
 }

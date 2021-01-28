@@ -223,15 +223,6 @@ class AListGenericsTest {
         assertArrayEquals(expectedArray, actualArray);
     }
 
-    @Test
-    public void addNullExceptions() {
-        IListGenerics<Person> myList = new AListGenerics<>();
-        myList.add(new Person(2, "Petya"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.add(null);
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
     //============================ Add index =======================
     static Stream<Arguments> addIndexTest() {
         Person person0 = new Person(0, "Xz000");
@@ -262,33 +253,6 @@ class AListGenericsTest {
         assertEquals(expected, actual);
         Object[] actualArray = iList.toArray();
         assertArrayEquals(expectedArray, actualArray);
-    }
-
-    @Test
-    public void addByIndexNullExceptions() {
-        IListGenerics<Person> myList = new AListGenerics<>();
-        myList.add(new Person(2, "Petya"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.add(1, null);
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
-    @Test
-    public void addByIndexExceptionsNegativeIndex() {
-        IListGenerics<Person> myList = new AListGenerics<>();
-        myList.add(new Person(2, "Petya"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.add(-1, new Person(2, "Vasya"));
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
-    @Test
-    public void addTestExceptionsExtraIndex() {
-        IListGenerics<Person> myList = new AListGenerics<>();
-        myList.add(new Person(2, "Petya"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.add(5, new Person(2, "Vasya"));
-        }, ListConstants.INCORRECT_ARGUMENT);
     }
 
     //============================ Remove =========================
@@ -494,24 +458,6 @@ class AListGenericsTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    public void setExceptionsExtraIndex() {
-        IListGenerics<Person> myList = new AListGenerics<>();
-        myList.add(new Person(2, "Petya"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.set(5, new Person(3, "Cenya"));
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
-    @Test
-    public void setValueNotFoundExceptions() {
-        IListGenerics<Person> myList = new AListGenerics<>();
-        myList.add(new Person(2, "Petya"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.set(-4, new Person(3, "Cenya"));
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
     //================================= To array ================================================
     static Stream<Arguments> toArrayTest() {
         Person person0 = new Person(0, "Xz000");
@@ -588,25 +534,6 @@ class AListGenericsTest {
         iList.removeAll(arr);
         Object[] actual = iList.toArray();
         assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void removeAllTestExceptionsNull() {
-        IListGenerics<Person> myList = new AListGenerics<>();
-        myList.add(new Person(2, "Petya"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.removeAll(null);
-        }, ListConstants.INCORRECT_ARGUMENT);
-    }
-
-    @Test
-    public void removeAllNullElementTestExceptions() {
-        IListGenerics<Person> myList = new AListGenerics<>();
-        myList.add(new Person(2, "Petya"));
-        myList.add(new Person(3, "IIIII"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            myList.removeAll(new Person[]{new Person(2, "Petya"), null});
-        }, ListConstants.INCORRECT_ARGUMENT);
     }
 
 }

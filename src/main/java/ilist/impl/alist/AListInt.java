@@ -8,6 +8,7 @@ public class AListInt implements IList {
     private static final int INITIAL_CAPACITY = 10;
     private int[] intArray;
     private int capacity = INITIAL_CAPACITY;
+    private final double COEFICIENT = 1.5;
     private int size;
 
     public AListInt() {
@@ -43,19 +44,12 @@ public class AListInt implements IList {
 
     @Override
     public int get(int index) {
-        if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
-        }
+        isCorrectIndex(index);
         return intArray[index];
     }
 
     @Override
     public boolean add(int value) {
-        if (size < intArray.length) {
-            intArray[size] = value;
-            size++;
-            return true;
-        }
         extendArray();
         intArray[size] = value;
         size++;
@@ -65,11 +59,9 @@ public class AListInt implements IList {
     @Override
     public boolean add(int index, int value) {
         if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+            return false;
         }
-        if (size == intArray.length) {
-            extendArray();
-        }
+        extendArray();
         for (int i = size; i > index; i--) {
             intArray[i] = intArray[i - 1];
         }
@@ -79,64 +71,29 @@ public class AListInt implements IList {
     }
 
     @Override
-    public int remove(int number) {
-        int returnNumber = 0;
-        int count = 0;
-        boolean flag = true;
-        for (int i = 0; i < size; i++) {
-            if (flag && intArray[i] == number) {
-                returnNumber = number;
-                flag = false;
-                continue;
-            }
-            intArray[count] = intArray[i];
-            count++;
-        }
-        size--;
-        if (flag) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT);
-        }
-        return returnNumber;
+    public int remove(int value) {
+        return removeByIndex(findIndex(value));
     }
 
     @Override
     public int removeByIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
-        }
-        int output = 0;
-        int count = 0;
-        boolean flag = true;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                output = intArray[index];
-                flag = false;
-                continue;
-            }
-            intArray[count] = intArray[i];
-            count++;
-        }
-        if (flag) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT);
-        }
+        isCorrectIndex(index);
         size--;
-        return output;
+        for (int i = index; i < size; i++) {
+            intArray[i] = intArray[i + 1];
+        }
+        return intArray[index];
     }
 
     @Override
     public boolean contains(int value) {
-        for (int i = 0; i < size; i++) {
-            if (intArray[i] == value) {
-                return true;
-            }
-        }
-        return false;
+        return findIndex(value) >= 0;
     }
 
     @Override
     public boolean set(int index, int value) {
         if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+            return false;
         }
         intArray[index] = value;
         return true;
@@ -144,14 +101,23 @@ public class AListInt implements IList {
 
     @Override
     public void print() {
-        String output = "";
-        for (int i = 0; i < size; i++) {
-            output += intArray[i];
-            if (i < size - 1) {
-                output += ", ";
-            }
+        System.out.println(toString());
+    }
+
+    @Override
+    public boolean removeAll(int[] arr) {
+        if (arr == null) {
+            return false;
         }
-        System.out.println('[' + output + ']');
+
+        for (int i = 0; i < arr.length; i++) {
+            int index = findIndex(arr[i]);
+            if (index < 0) {
+                continue;
+            }
+            removeByIndex(index);
+        }
+        return true;
     }
 
     @Override
@@ -164,33 +130,39 @@ public class AListInt implements IList {
     }
 
     @Override
-    public boolean removeAll(int[] arr) {
-        if (arr == null) {
-            throw new IllegalArgumentException(ListConstants.ARRAY_IS_EMPTY);
+    public String toString() {
+        StringBuilder output = new StringBuilder("[");
+        for (int i = 0; i < size - 1; i++) {
+            output.append(intArray[i]).append(", ");
         }
-        for (int i = 0; i < arr.length; i++) {
-            int count = 0;
-            for (int j = 0; j < size; j++) {
-                if (intArray[j] == arr[i]) {
-                    continue;
-                }
-                intArray[count] = intArray[j];
-                count++;
+        output.append(intArray[size - 1]);
+        output.append(']');
+        return output.toString();
+    }
+
+    private void extendArray() {
+        if (size == intArray.length - 1) {
+            int[] temp = intArray;
+            capacity *= COEFICIENT;
+            intArray = new int[capacity];
+            for (int i = 0; i < size; i++) {
+                intArray[i] = temp[i];
             }
-            size--;
         }
-        return true;
     }
 
-
-    private int[] extendArray() {
-        int[] temp = intArray;
-        this.capacity += 1;
-        intArray = new int[capacity];
-        for (int i = 0; i < capacity - 1; i++) {
-            intArray[i] = temp[i];
+    private int findIndex(int value) {
+        for (int i = 0; i < size; i++) {
+            if (intArray[i] == value) {
+                return i;
+            }
         }
-        return intArray;
+        return -1;
     }
 
+    private void isCorrectIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+        }
+    }
 }
