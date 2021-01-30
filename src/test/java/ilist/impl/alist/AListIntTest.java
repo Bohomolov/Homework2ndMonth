@@ -112,7 +112,7 @@ class AListIntTest {
         );
     }
 
-    @ParameterizedTest(name = "Get test. Data input: {0}, {1}")
+    @ParameterizedTest(name = "Get test. Data input: {0}, {1}, {2}")
     @MethodSource("getTest")
     public void getTestMain(IList iList, int index, int expected) {
         int actual = iList.get(index);

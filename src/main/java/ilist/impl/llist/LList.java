@@ -6,6 +6,7 @@ import ilist.interfaces.IList;
 public class LList implements IList {
     private int size = 0;
     private Node root = null;
+    private int startIndex = 0;
 
     public LList() {
 
@@ -18,60 +19,34 @@ public class LList implements IList {
     @Override
     public void clear() {
         size = 0;
-        if (root == null) {
-            return;
-        }
-        clear(root.next);
         root = null;
-    }
-
-    private void clear(Node node) {
-        if (node.next == null) {
-            return;
-        }
-        clear(node.next);
-        node.next = null;
     }
 
     @Override
     public int size() {
         return size;
     }
+
+    @Override
+    public int getValue(int value) {
+        return getValue(value, root);
+    }
+
     @Override
     public int get(int index) {
-        if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
-        }
-
-        Node node = root;
-        int innerIndex = 0;
-        while (node != null) {
-            if (index == innerIndex) {
-                return node.value;
-            }
-            innerIndex++;
-            node = node.next;
-        }
-        return 0;
+        isCorrectIndex(index);
+        return getNodeByIndex(index, startIndex, root).value;
     }
+
     @Override
     public boolean add(int value) {
         if (root == null) {
             root = new Node(value);
             size++;
-            return true;
+        } else {
+            add(value, root);
         }
-        Node node = root;
-        while (node != null) {
-            Node next = node.next;
-            if (next == null) {
-                node.next = new Node(value);
-                size++;
-                return true;
-            }
-            node = node.next;
-        }
-        return false;
+        return true;
     }
 
     @Override
@@ -79,42 +54,74 @@ public class LList implements IList {
         if (index < 0 || index > size) {
             return false;
         }
+        if (root == null) {
+            root = new Node(value);
+            size++;
+            return true;
+        }
+        if (index == 0) {
+            Node node = new Node(value);
+            node.next = root;
+            root = node;
+            size++;
+            return true;
+        }
+
+        Node prevNode = getNodeByIndex(index - 1, startIndex, root);
+        Node node = new Node(value);
+
+        node.next = prevNode.next;
+        prevNode.next = node;
+        size++;
         return true;
     }
 
     @Override
-    public int remove(int number) {
-        return 0;
+    public int remove(int value) {
+        if (root == null) {
+            throw new IllegalArgumentException("root is empty");
+        }
+        if (root.value == value) {
+            root = root.next;
+            size--;
+            return value;
+        }
+        int prevIndex = getIndex(value, startIndex, root) - 1;
+        if (prevIndex < 0) {
+            throw new IllegalArgumentException("value is absent");
+        }
+        Node prevNode = getNodeByIndex(prevIndex, startIndex, root);
+        prevNode.next = prevNode.next.next;
+        size--;
+        return value;
     }
 
     @Override
     public int removeByIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+        isCorrectIndex(index);
+        if (root == null) {
+            throw new IllegalArgumentException("root is empty");
         }
-        Node node = root;
-        int innerIndex = 0;
-        while (node != null) {
-            if (index == innerIndex) {
-                node.next = node.next.next;
-                return node.value;
-            }
-            innerIndex++;
-            node = node.next;
+        int out = 0;
+        if (index == 0) {
+            out = root.value;
+            root = root.next;
+            size--;
+            return out;
         }
-        return 0;
+        out = get(index);
+        Node prevNode = getNodeByIndex(index - 1, startIndex, root);
+        prevNode.next = prevNode.next.next;
+        size--;
+        return out;
     }
 
     @Override
     public boolean contains(int value) {
-        Node node = root;
-        while (node != null) {
-            if (node.value == value) {
-                return true;
-            }
-            node = node.next;
+        if (root == null) {
+            return false;
         }
-        return false;
+        return contains(value, startIndex, root);
     }
 
     @Override
@@ -122,42 +129,18 @@ public class LList implements IList {
         if (index < 0 || index > size) {
             return false;
         }
-        Node node = root;
-        int innerIndex = 0;
-        while (node != null) {
-            if (index == innerIndex) {
-                node.value = value;
-                return true;
-            }
-            innerIndex++;
-            node = node.next;
-        }
-        return false;
+        return set(index, value, startIndex, root);
     }
 
     @Override
     public void print() {
-        String result = "[";
-        int i = 0;
-        for (Node node = root; node != null; i++) {
-            result += node.value;
-            if (i < size - 1) {
-                result += ", ";
-            }
-            node = node.next;
-        }
-        result += "]";
-        System.out.println(result);
+        System.out.println(toString());
     }
 
     @Override
     public int[] toArray() {
         int[] output = new int[size];
-        Node node = root;
-        for (int i = 0; i < output.length; i++) {
-            output[i] = node.value;
-            node = node.next;
-        }
+        toArray(startIndex, output, root);
         return output;
     }
 
@@ -166,19 +149,111 @@ public class LList implements IList {
         return false;
     }
 
-    private void addAll(int[] ints) {
-        for (int i : ints) {
-            add(i);
+    @Override
+    public String toString() {
+        int[] temp = toArray();
+        StringBuilder output = new StringBuilder("[");
+        if (temp.length != 0) {
+            for (int i = 0; i < size - 1; i++) {
+                output.append(temp[i]).append(", ");
+            }
+            output.append(temp[size - 1]);
         }
+        output.append(']');
+        return output.toString();
     }
 
     private static class Node {
+
         private int value;
         private Node next;
 
         Node(int value) {
             next = null;
             this.value = value;
+        }
+    }
+
+    private void addAll(int[] ints) {
+        for (int i : ints) {
+            add(i);
+        }
+    }
+
+    private void add(int value, Node node) {
+        if (node.next == null) {
+            node.next = new Node(value);
+            size++;
+            return;
+        }
+        add(value, node.next);
+    }
+
+    private boolean contains(int value, int startIndex, Node node) {
+        if (node.value == value) {
+            return true;
+        } else if (node.next == null) {
+            return false;
+        }
+        return contains(value, startIndex + 1, node.next);
+    }
+
+    private int getValue(int value, Node node) {
+        if (node.next == null) {
+            return node.value;
+        }
+        if (node.value == value) {
+            return node.value;
+        }
+        return getValue(value, node.next);
+    }
+
+    private Node getNodeByIndex(int index, int startIndex, Node node) {
+        if (startIndex == index) {
+            return node;
+        }
+        if (node.next == null) {
+            return node;
+        }
+        return getNodeByIndex(index, startIndex + 1, node.next);
+    }
+
+    private int getIndex(int value, int startIndex, Node node) {
+        if (node.value == value) {
+            return startIndex;
+        }
+        if (node.next == null) {
+            return -2;
+        }
+        return getIndex(value, startIndex + 1, node.next);
+    }
+
+
+    private boolean set(int index, int value, int startIndex, Node node) {
+        if (index == startIndex) {
+            node.value = value;
+            return true;
+        } else if (node.next == null) {
+            return false;
+        }
+        return set(index, value, startIndex + 1, node.next);
+    }
+
+    private void toArray(int index, int[] out, Node node) {
+        if (node == null) {
+            return;
+        }
+        if (node.next == null) {
+            out[index] = node.value;
+            return;
+        }
+        out[index] = node.value;
+        toArray(index + 1, out, node.next);
+    }
+
+    private void isCorrectIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
         }
     }
 }

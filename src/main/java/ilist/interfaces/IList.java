@@ -24,4 +24,6 @@ public interface IList {
     int[] toArray();
 
     boolean removeAll(int[] ar);
+
+    int getValue(int value);
 }

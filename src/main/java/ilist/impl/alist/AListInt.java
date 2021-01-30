@@ -121,6 +121,17 @@ public class AListInt implements IList {
     }
 
     @Override
+    public int getValue(int value) {
+        int out = 0;
+        for (int i = 0; i < intArray.length; i++) {
+            if (intArray[i] == value){
+                out = intArray[i];
+            }
+        }
+        return out;
+    }
+
+    @Override
     public int[] toArray() {
         int[] output = new int[size];
         for (int i = 0; i < size; i++) {
