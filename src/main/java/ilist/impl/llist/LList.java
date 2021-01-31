@@ -6,7 +6,7 @@ import ilist.interfaces.IList;
 public class LList implements IList {
     private int size = 0;
     private Node root = null;
-    private int startIndex = 0;
+    private final int startIndex = 0;
 
     public LList() {
 
@@ -29,6 +29,7 @@ public class LList implements IList {
 
     @Override
     public int getValue(int value) {
+        isRootEmpty();
         return getValue(value, root);
     }
 
@@ -78,9 +79,7 @@ public class LList implements IList {
 
     @Override
     public int remove(int value) {
-        if (root == null) {
-            throw new IllegalArgumentException("root is empty");
-        }
+        isRootEmpty();
         if (root.value == value) {
             root = root.next;
             size--;
@@ -99,10 +98,8 @@ public class LList implements IList {
     @Override
     public int removeByIndex(int index) {
         isCorrectIndex(index);
-        if (root == null) {
-            throw new IllegalArgumentException("root is empty");
-        }
-        int out = 0;
+        isRootEmpty();
+        int out;
         if (index == 0) {
             out = root.value;
             root = root.next;
@@ -146,7 +143,10 @@ public class LList implements IList {
 
     @Override
     public boolean removeAll(int[] ar) {
-        return false;
+        for (int i = 0; i < ar.length; i++) {
+            remove(ar[i]);
+        }
+        return true;
     }
 
     @Override
@@ -254,6 +254,12 @@ public class LList implements IList {
     private void isCorrectIndex(int index) {
         if (index < 0 || index > size) {
             throw new IllegalArgumentException(ListConstants.INCORRECT_ARGUMENT + size);
+        }
+    }
+
+    private void isRootEmpty() {
+        if (root == null) {
+            throw new IllegalArgumentException("root is empty");
         }
     }
 }
