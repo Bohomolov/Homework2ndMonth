@@ -93,7 +93,7 @@ public class LListDoubleList implements IList {
         }
         if (root.value == number) {
             root = root.next;
-            root.prev = null;
+//            root.prev = null;
             size--;
             return number;
         }
@@ -118,7 +118,7 @@ public class LListDoubleList implements IList {
         if (index == 0) {
             int output = root.value;
             root = root.next;
-            root.prev = null;
+//            root.prev = null;
             size--;
             return output;
         }
@@ -140,17 +140,6 @@ public class LListDoubleList implements IList {
     @Override
     public boolean set(int index, int value) {
         return set(root, index, startIndex, value);
-    }
-
-    private boolean set(Node node, int index, int startIndex, int value) {
-        if (node == null) {
-            return false;
-        }
-        if (index == startIndex) {
-            node.value = value;
-            return true;
-        }
-        return set(node.next, index, startIndex + 1, value);
     }
 
     @Override
@@ -283,8 +272,21 @@ public class LListDoubleList implements IList {
         }
         return contains(node.next, value);
     }
+    private boolean set(Node node, int index, int startIndex, int value) {
+        if (node == null) {
+            return false;
+        }
+        if (index == startIndex) {
+            node.value = value;
+            return true;
+        }
+        return set(node.next, index, startIndex + 1, value);
+    }
 
     private void toArray(int index, int[] out, Node node) {
+        if (node == null) {
+            return;
+        }
         if (node.next == null) {
             out[index] = node.value;
             return;

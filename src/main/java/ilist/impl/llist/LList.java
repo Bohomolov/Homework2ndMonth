@@ -143,8 +143,8 @@ public class LList implements IList {
 
     @Override
     public boolean removeAll(int[] ar) {
-        for (int j : ar) {
-            remove(j);
+        for (int i = 0; i < ar.length; i++) {
+            remove(ar[i]);
         }
         return true;
     }
@@ -240,6 +240,9 @@ public class LList implements IList {
     }
 
     private void toArray(int index, int[] out, Node node) {
+        if (node == null) {
+            return;
+        }
         if (node.next == null) {
             out[index] = node.value;
             return;
