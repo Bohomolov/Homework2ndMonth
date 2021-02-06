@@ -121,13 +121,13 @@ class LListDoubleListTest {
     }
 
     @Test
-    void isRootEmptyTest() {
+    void valueNotFoundTest() {
         assertThrows(IllegalArgumentException.class, () -> {
             IList myList = new LListDoubleList();
             myList.add(9);
             myList.add(7);
             myList.getValue(5);
-        }, "Value is absent");
+        }, "Value not found");
     }
 
     //====================================== get ===============================
@@ -223,7 +223,11 @@ class LListDoubleListTest {
                 Arguments.arguments(myList, 6, -9, new int[]{5, 5, 1, 2, 0, -1, -9}, true),
                 Arguments.arguments(myList, 8, -9, new int[]{5, 5, 1, 2, 0, -1, -9}, false),
                 Arguments.arguments(myList, -8, -9, new int[]{5, 5, 1, 2, 0, -1, -9}, false),
-                Arguments.arguments(myList, 7, 10, new int[]{5, 5, 1, 2, 0, -1, -9, 10}, true)
+                Arguments.arguments(myList, 7, 10, new int[]{5, 5, 1, 2, 0, -1, -9, 10}, true),
+                Arguments.arguments(myList, 4, 3, new int[]{5, 5, 1, 2, 3, 0, -1, -9, 10}, true),
+                Arguments.arguments(myList, 7, 7, new int[]{5, 5, 1, 2, 3, 0, -1, 7, -9, 10}, true),
+                Arguments.arguments(myList, 8, 8, new int[]{5, 5, 1, 2, 3, 0, -1, 7, 8, -9, 10}, true),
+                Arguments.arguments(myList, 2, 2, new int[]{5, 5, 2, 1, 2, 3, 0, -1, 7, 8, -9, 10}, true)
         );
     }
 
@@ -435,9 +439,33 @@ class LListDoubleListTest {
         myList.add(1);
         myList.add(2);
         myList.add(3);
+
+        IList myList3 = new LListDoubleList();
+        myList3.add(0);
+        myList3.add(1);
+        myList3.add(2);
+        myList3.add(3);
+        myList3.add(4);
+        myList3.add(5);
+        myList3.add(6);
+        myList3.add(7);
+        myList3.add(8);
+        myList3.add(9);
+        myList3.add(10);
+        myList3.add(-9);
+        myList3.add(-8);
+        myList3.add(-7);
+        myList3.add(-6);
+        myList3.add(-5);
+        myList3.add(-4);
+        myList3.add(-3);
+        myList3.add(-2);
+        myList3.add(-1);
+        myList3.add(0);
         return Stream.of(
                 Arguments.arguments(myList, new int[]{0, 1, 2, 3}),
-                Arguments.arguments(myList2, new int[]{})
+                Arguments.arguments(myList2, new int[]{}),
+                Arguments.arguments(myList3, new int[]{0, 1, 2, 3,4,5,6,7,8,9,10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0})
         );
     }
 
@@ -482,7 +510,7 @@ class LListDoubleListTest {
     @Test
     void isValueAbsentTestRemoveAll() {
         assertThrows(IllegalArgumentException.class, () -> {
-            IList myList =new  LListDoubleList();
+            IList myList = new LListDoubleList();
             myList.add(10);
             int[] ints = {1, 5, 6};
             myList.removeAll(ints);

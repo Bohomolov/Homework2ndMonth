@@ -19,17 +19,10 @@ public class LListDoubleList implements IList {
         addAll(ints);
     }
 
-    public int getCrownValue() {
-        return crown.value;
-    }
-
-    public int getRootValue() {
-        return root.value;
-    }
-
     @Override
     public void clear() {
         root = null;
+        crown = null;
         size = 0;
     }
 
@@ -40,12 +33,17 @@ public class LListDoubleList implements IList {
 
     @Override
     public int get(int index) {
-        return get(index, root, startIndex);
+        indexValidation(index);
+        Node returnNode = getNodeByIndex(index, whereIsStart(index) ? crown : root, whereIsStart(index) ? size - 1 : startIndex);
+        returnNodeValidationByIndex(returnNode, index);
+        return returnNode.value;
     }
 
     @Override
     public int getValue(int value) {
-        return getValue(root, value);
+        Node returnNode = getNodeByValue(root, crown, value);
+        returnNodeValidationByValue(returnNode, value);
+        return returnNode.value;
     }
 
     @Override
@@ -53,10 +51,11 @@ public class LListDoubleList implements IList {
         if (root == null) {
             root = new Node(null, null, value);
             crown = root;
-            size++;
-            return true;
+        } else {
+            crown.next = new Node(null, crown, value);
+            crown = crown.next;
         }
-        add(value, root);
+        size++;
         return true;
     }
 
@@ -68,21 +67,16 @@ public class LListDoubleList implements IList {
         if (root == null) {
             root = new Node(null, null, value);
             crown = root;
-            size++;
-            return true;
-        }
-        size++;
-        if (index == 0) {
+        } else if (index == 0) {
             root.prev = new Node(root, null, value);
             root = root.prev;
-            return true;
-        }
-        if (index == size - 1) {
+        } else if (index == size) {
             crown.next = new Node(null, crown, value);
             crown = crown.next;
-            return true;
+        } else {
+            addByIndex(whereIsStart(index) ? crown.prev : root.next, index, whereIsStart(index) ? size - 2 : startIndex + 1, value);
         }
-        addByIndex(root, index, startIndex, value);
+        size++;
         return true;
     }
 
@@ -92,19 +86,17 @@ public class LListDoubleList implements IList {
             throw new IllegalArgumentException("Root is null");
         }
         if (root.value == number) {
-            root = root.next;
-//            root.prev = null;
-            size--;
-            return number;
-        }
-        if (crown.value == number) {
+            deleteRoot();
+        } else if (crown.value == number) {
             crown = crown.prev;
             crown.next = null;
-            size--;
-            return number;
+        } else {
+            Node removeNode = getNodeByValue(root, crown, number);
+            returnNodeValidationByValue(removeNode, number);
+            changeLinks(removeNode);
         }
-
-        return remove(root, number);
+        size--;
+        return number;
     }
 
     @Override
@@ -112,34 +104,38 @@ public class LListDoubleList implements IList {
         if (index < 0 || index > size - 1) {
             throw new IllegalArgumentException("Incorrect index " + index);
         }
-        if (root == null) {
-            throw new IllegalArgumentException("Root is empty");
-        }
+        int output;
         if (index == 0) {
-            int output = root.value;
-            root = root.next;
-//            root.prev = null;
-            size--;
-            return output;
-        }
-        if (index == size - 1) {
-            int output = crown.value;
+            output = root.value;
+            deleteRoot();
+        } else if (index == size - 1) {
+            output = crown.value;
             crown = crown.prev;
             crown.next = null;
-            size--;
-            return output;
+        } else {
+            Node removeNode = getNodeByIndex(index, whereIsStart(index) ? crown.prev : root.next, whereIsStart(index) ? size - 2 : startIndex + 1);
+            returnNodeValidationByIndex(removeNode, index);
+            output = removeNode.value;
+            changeLinks(removeNode);
         }
-        return removeByIndex(root, index, startIndex);
+        size--;
+        return output;
     }
+
 
     @Override
     public boolean contains(int value) {
-        return contains(root, value);
+        return getNodeByValue(root, crown, value) != null;
     }
 
     @Override
     public boolean set(int index, int value) {
-        return set(root, index, startIndex, value);
+        Node node = getNodeByIndex(index, whereIsStart(index) ? crown : root, whereIsStart(index) ? size - 1 : startIndex);
+        if (node == null) {
+            return false;
+        }
+        node.value = value;
+        return true;
     }
 
     @Override
@@ -150,7 +146,7 @@ public class LListDoubleList implements IList {
     @Override
     public int[] toArray() {
         int[] output = new int[size];
-        toArray(startIndex, output, root);
+        toArray(startIndex, size - 1, output, root, crown);
         return output;
     }
 
@@ -188,14 +184,14 @@ public class LListDoubleList implements IList {
         }
     }
 
-    private int get(int index, Node node, int startIndex) {
+    private Node getNodeByIndex(int index, Node node, int startIndex) {
         if (node == null) {
-            throw new IllegalArgumentException("Index is absent " + index);
+            return null;
         }
         if (startIndex == index) {
-            return node.value;
+            return node;
         }
-        return get(index, node.next, startIndex + 1);
+        return getNodeByIndex(index, whereIsStart(index) ? node.prev : node.next, whereIsStart(index) ? startIndex - 1 : startIndex + 1);
     }
 
     private void addAll(int[] ints) {
@@ -204,24 +200,17 @@ public class LListDoubleList implements IList {
         }
     }
 
-    private int getValue(Node node, int value) {
-        if (node == null) {
-            throw new IllegalArgumentException("Value is absent " + value);
+    private Node getNodeByValue(Node nodeStart, Node nodeEnd, int value) {
+        if (nodeStart == null || nodeEnd == null) {
+            return null;
         }
-        if (node.value == value) {
-            return node.value;
+        if (nodeStart.value == value) {
+            return nodeStart;
         }
-        return getValue(node.next, value);
-    }
-
-    private void add(int value, Node node) {
-        if (node.next == null) {
-            node.next = new Node(null, node, value);
-            crown = node.next;
-            size++;
-            return;
+        if (nodeEnd.value == value) {
+            return nodeEnd;
         }
-        add(value, node.next);
+        return getNodeByValue(nodeStart.next, nodeEnd.prev, value);
     }
 
     private void addByIndex(Node node, int index, int startIndex, int value) {
@@ -229,69 +218,56 @@ public class LListDoubleList implements IList {
             Node newNode = new Node(node, node.prev, value);
             node.prev.next = newNode;
             node.prev = newNode;
-            size++;
             return;
         }
-        addByIndex(node.next, index, startIndex + 1, value);
+        addByIndex(whereIsStart(index) ? node.prev : node.next, index, whereIsStart(index) ? startIndex - 1 : startIndex + 1, value);
     }
 
-    private int remove(Node node, int value) {
-        if (node == null) {
-            throw new IllegalArgumentException("Value is absent " + value);
-        }
-        if (node.value == value) {
-            Node prevNode = node.prev;
-            Node nextNode = node.next;
-            prevNode.next = nextNode;
-            nextNode.prev = prevNode;
-            size--;
-            return value;
-        }
-        return remove(node.next, value);
-    }
-
-    private int removeByIndex(Node node, int index, int startIndex) {
-        if (index == startIndex) {
-            int output = node.value;
-            Node prevNode = node.prev;
-            Node nextNode = node.next;
-            prevNode.next = nextNode;
-            nextNode.prev = prevNode;
-            size--;
-            return output;
-        }
-        return removeByIndex(node.next, index, startIndex + 1);
-    }
-
-    private boolean contains(Node node, int value) {
-        if (node == null) {
-            return false;
-        }
-        if (node.value == value) {
-            return true;
-        }
-        return contains(node.next, value);
-    }
-    private boolean set(Node node, int index, int startIndex, int value) {
-        if (node == null) {
-            return false;
-        }
-        if (index == startIndex) {
-            node.value = value;
-            return true;
-        }
-        return set(node.next, index, startIndex + 1, value);
-    }
-
-    private void toArray(int index, int[] out, Node node) {
-        if (node == null) {
+    private void toArray(int index, int endIndex, int[] out, Node nodeStart, Node nodeEnd) {
+        if (whereIsStart(index) || nodeEnd == null || nodeStart == null) {
             return;
         }
-        if (node.next == null) {
-            out[index] = node.value;
-            return;
+        out[index] = nodeStart.value;
+        out[endIndex] = nodeEnd.value;
+        toArray(index + 1, endIndex - 1, out, nodeStart.next, nodeEnd.prev);
+    }
+
+    private void indexValidation(int index) {
+        if (index < 0 || index > size) {
+            throw new IllegalArgumentException("Incorrect index size = " + size);
         }
-        out[index] = node.value;
-        toArray(index + 1, out, node.next);
+    }
+
+    private boolean whereIsStart(int index) {
+        return index > size / 2 + size % 2;
+    }
+
+    private void returnNodeValidationByValue(Node returnNode, int value) {
+        if (returnNode == null) {
+            throw new IllegalArgumentException(value + " is not found");
+        }
+    }
+
+    private void returnNodeValidationByIndex(Node returnNode, int index) {
+        if (returnNode == null) {
+            throw new IllegalArgumentException(index + " index is not found");
+        }
+    }
+
+    private void deleteRoot() {
+        if (size == 1) {
+            root = null;
+            crown = null;
+        } else {
+            root = root.next;
+            root.prev = null;
+        }
+    }
+
+    private void changeLinks(Node node) {
+        Node prevNode = node.prev;
+        Node nextNode = node.next;
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
     }
 }
