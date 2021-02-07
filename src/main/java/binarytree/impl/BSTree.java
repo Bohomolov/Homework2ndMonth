@@ -5,7 +5,7 @@ import ilist.impl.llist.LList;
 import ilist.interfaces.IList;
 
 public class BSTree implements ITree {
-    private static Node root;
+    private Node root;
 
     public BSTree() {
         root = null;
@@ -40,7 +40,7 @@ public class BSTree implements ITree {
     @Override
     public int[] toArray() {
         if (root == null) {
-            throw new NullPointerException();
+            return new int[]{};
         }
         IList myList = new LList();
         toArray(myList, root);
@@ -65,10 +65,85 @@ public class BSTree implements ITree {
         delete(root, value);
     }
 
-    private void delete(Node node, int value) {
+    public void delete(Node node, int value) {
         if (node == null) {
-            return;
+            throw new IllegalArgumentException("Root is null.");
         }
+
+        Node parentNode = findParentNodeByValue(root, value);
+        if (parentNode == null) {
+            throw new IllegalArgumentException("Value is not found");
+        }
+        boolean isLeftChild = parentNode.left.value == value;
+        Node deleteNode = isLeftChild ? parentNode.left : parentNode.right;
+        if (deleteNode.left == null && deleteNode.right == null) {
+            if (root.value == value) {
+                root = null;
+            } else if (isLeftChild) {
+                parentNode.left = null;
+            } else {
+                parentNode.right = null;
+            }
+        } else if (deleteNode.right == null) {
+            if (root.value == value) {
+                root = root.left;
+            } else if (isLeftChild) {
+                parentNode.left = deleteNode.left;
+            } else {
+                parentNode.right = deleteNode.left;
+            }
+        } else if (deleteNode.left == null) {
+            if (root.value == value) {
+                root = root.right;
+            } else if (isLeftChild) {
+                parentNode.left = deleteNode.right;
+            } else {
+                parentNode.right = deleteNode.right;
+            }
+        } else {
+            Node successor = getSuccessor(deleteNode);
+            if (deleteNode == root) {
+                root = successor;
+            } else if (isLeftChild) {
+                parentNode.left = successor;
+            } else {
+                parentNode.right = successor;
+            }
+            successor.left = deleteNode.left;
+        }
+    }
+
+    private Node getSuccessor(Node deleteNode) {
+        Node successorParent = deleteNode;
+        Node successor = deleteNode;
+        Node current = deleteNode.right;
+        while (current != null) {
+            successorParent = successor;
+            successor = current;
+            current = current.left;
+        }
+        if (successor != deleteNode.right) {
+            successorParent.left = successor.right;
+            successor.right = deleteNode.right;
+        }
+        return successor;
+    }
+
+    private Node findParentNodeByValue(Node node, int value) {
+        if (root.value == value) {
+            return root;
+        }
+        Node parent = null;
+        if (value == node.right.value) {
+            parent = node;
+        } else if (node.left.value == value) {
+            parent = node;
+        } else if (value < node.value) {
+            findParentNodeByValue(node.left, value);
+        } else {
+            findParentNodeByValue(node.right, value);
+        }
+        return parent;
     }
 
     @Override
@@ -86,7 +161,7 @@ public class BSTree implements ITree {
     }
 
     private int getHeight(Node node, int height) {
-        if (node.left != null || node.right != null){
+        if (node.left != null || node.right != null) {
             height++;
         }
         return height;
@@ -135,7 +210,7 @@ public class BSTree implements ITree {
         Node left;
         Node right;
 
-        public Node(int value, Node left, Node right) {
+        private Node(int value, Node left, Node right) {
             this.value = value;
             this.left = left;
             this.right = right;
@@ -155,12 +230,11 @@ public class BSTree implements ITree {
     }
 
     private void toArray(IList myList, Node node) {
-        if (node == null) {
-            return;
+        if (node != null) {
+            toArray(myList, node.left);
+            myList.add(node.value);
+            toArray(myList, node.right);
         }
-        toArray(myList, node.left);
-        myList.add(node.value);
-        toArray(myList, node.right);
     }
 
     private int nodes(Node node, int count) {

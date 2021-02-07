@@ -6,8 +6,8 @@ public interface ITree {
     void clear();
     int size();
     int[] toArray();
-    void add(int val);
-    void delete(int val);
+    void add(int value);
+    void delete(int value);
     int getWidth();
     int getHeight();
     int nodes();
