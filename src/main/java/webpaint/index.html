@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paint</title>
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="paint-filed-container">
+        <canvas class="drawing-canvas" id="drawingCanvas" height="500px" width="600px"></canvas>
+    </div>
+    <div class="panel">
+        <div class="color-panel">
+            <label for="color">Color</label>
+            <input type="color" id="color">
+        </div>
+        <label for="thicknessPanel">Brush thickness</label>
+        <div id="thicknessPanel" class="thickness-panel">
+            <button class="thickness-btn" onclick="changeThickness(1)">1</button>
+            <button class="thickness-btn" onclick="changeThickness(5)">5</button>
+            <button class="thickness-btn" onclick="changeThickness(10)">10</button>
+        </div>
+        <div class="tool-bar">
+            <button class="tool-bar-btn" onclick="saveCanvas()">Save</button>
+            <button class="tool-bar-btn" onclick="clearCanvas()">Clear</button>
+        </div>
+        <label for="savedContainer">Right click to save</label>
+        <div class="saved-container" id="savedContainer">
+            <img id="savedImage">
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+<script src="main.js" defer></script>
+</html>
