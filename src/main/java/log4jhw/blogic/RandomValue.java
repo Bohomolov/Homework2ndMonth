@@ -22,17 +22,4 @@ public class RandomValue {
         }
         return randomValue;
     }
-
-    public static void main(String[] args) {
-        RandomValue randomValue = new RandomValue();
-        randomValue.getRandomValue();
-        randomValue.getRandomValue();
-        randomValue.getRandomValue();
-        randomValue.getRandomValue();
-        randomValue.getRandomValue();
-        randomValue.getRandomValue();
-        randomValue.getRandomValue();
-        randomValue.getRandomValue();
-    }
-
 }

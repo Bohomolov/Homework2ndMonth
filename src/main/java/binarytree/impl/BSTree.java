@@ -153,18 +153,7 @@ public class BSTree implements ITree {
 
     @Override
     public int getHeight() {
-        if (root == null) {
-            return 0;
-        }
-        int height = 0;
-        return getHeight(root, height);
-    }
-
-    private int getHeight(Node node, int height) {
-        if (node.left != null || node.right != null) {
-            height++;
-        }
-        return height;
+        return getHeight(root);
     }
 
     @Override
@@ -267,15 +256,22 @@ public class BSTree implements ITree {
         if (value < node.value) {
             if (node.left == null) {
                 node.left = new Node(value, null, null);
-                return;
+            } else {
+                add(value, node.left);
             }
-            add(value, node.left);
         } else {
             if (node.right == null) {
                 node.right = new Node(value, null, null);
-                return;
+            } else {
+                add(value, node.right);
             }
-            add(value, node.right);
         }
+    }
+
+    private int getHeight(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + Math.max(getHeight(node.left), getHeight(node.right));
     }
 }
