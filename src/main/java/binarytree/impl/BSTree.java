@@ -25,6 +25,7 @@ public class BSTree implements ITree {
 
     @Override
     public void clear() {
+        clear(root);
         root = null;
     }
 
@@ -59,16 +60,7 @@ public class BSTree implements ITree {
 
     @Override
     public void delete(int value) {
-        if (root == null) {
-            return;
-        }
-        delete(root, value);
-    }
-
-    public void delete(Node node, int value) {
-        if (node == null) {
-            throw new IllegalArgumentException("Root is null.");
-        }
+        rootIsNull(root);
 
         Node parentNode = findParentNodeByValue(root, value);
         if (parentNode == null) {
@@ -113,39 +105,6 @@ public class BSTree implements ITree {
         }
     }
 
-    private Node getSuccessor(Node deleteNode) {
-        Node successorParent = deleteNode;
-        Node successor = deleteNode;
-        Node current = deleteNode.right;
-        while (current != null) {
-            successorParent = successor;
-            successor = current;
-            current = current.left;
-        }
-        if (successor != deleteNode.right) {
-            successorParent.left = successor.right;
-            successor.right = deleteNode.right;
-        }
-        return successor;
-    }
-
-    private Node findParentNodeByValue(Node node, int value) {
-        if (root.value == value) {
-            return root;
-        }
-        Node parent = null;
-        if (value == node.right.value) {
-            parent = node;
-        } else if (node.left.value == value) {
-            parent = node;
-        } else if (value < node.value) {
-            findParentNodeByValue(node.left, value);
-        } else {
-            findParentNodeByValue(node.right, value);
-        }
-        return parent;
-    }
-
     @Override
     public int getWidth() {
         return 0;
@@ -176,7 +135,7 @@ public class BSTree implements ITree {
 
     @Override
     public void reverse() {
-
+        smallLeftRotation(root);
     }
 
     @Override
@@ -204,6 +163,17 @@ public class BSTree implements ITree {
             this.left = left;
             this.right = right;
         }
+    }
+
+    private void clear(Node node) {
+        if (node.left != null) {
+            clear(node.left);
+        }
+        node.left = null;
+        if (node.right != null) {
+            clear(node.right);
+        }
+        node.right = null;
     }
 
     private int size(int size, Node node) {
@@ -268,10 +238,61 @@ public class BSTree implements ITree {
         }
     }
 
+
+    private Node getSuccessor(Node deleteNode) {
+        Node successorParent = deleteNode;
+        Node successor = deleteNode;
+        Node current = deleteNode.right;
+        while (current != null) {
+            successorParent = successor;
+            successor = current;
+            current = current.left;
+        }
+        if (successor != deleteNode.right) {
+            successorParent.left = successor.right;
+            successor.right = deleteNode.right;
+        }
+        return successor;
+    }
+
+    private Node findParentNodeByValue(Node node, int value) {
+        if (root.value == value) {
+            return root;
+        }
+        Node parent = null;
+        if (value == node.right.value) {
+            parent = node;
+        } else if (node.left.value == value) {
+            parent = node;
+        } else if (value < node.value) {
+            findParentNodeByValue(node.left, value);
+        } else {
+            findParentNodeByValue(node.right, value);
+        }
+        return parent;
+    }
+
     private int getHeight(Node node) {
         if (node == null) {
             return 0;
         }
         return 1 + Math.max(getHeight(node.left), getHeight(node.right));
+    }
+    private void smallLeftRotation(Node node) {
+        if (node != null) {
+            if (node.left != null || node.right != null) {
+                Node rotation = node.right;
+                node.right = rotation.left;
+                rotation.left = node;
+            }
+            smallLeftRotation(node.right);
+            smallLeftRotation(node.left);
+        }
+    }
+
+    private void rootIsNull(Node root) {
+        if (root == null) {
+            throw new IllegalArgumentException("Root is null.");
+        }
     }
 }

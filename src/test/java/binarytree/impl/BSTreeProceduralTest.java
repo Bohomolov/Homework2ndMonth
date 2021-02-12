@@ -1,7 +1,7 @@
 package binarytree.impl;
 
-
 import binarytree.ITree;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -11,7 +11,78 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BSTreeProceduralTest {
+    @Test
+    public void clearTest() {
+        ITree myTree = new BSTreeProcedural();
+        myTree.add(1);
+        myTree.add(2);
+        myTree.add(3);
+        myTree.add(4);
+        myTree.add(5);
+        myTree.clear();
+        int[] expected = new int[]{};
+        int[] actual = myTree.toArray();
+        assertArrayEquals(expected, actual);
+    }
 
+    //============================================ size =====================================
+    static Stream<Arguments> sizeTest() {
+        ITree myTree1 = new BSTreeProcedural();
+        myTree1.init(new int[]{5, 9, 8, 7, 3, 4, 5});
+
+        ITree myTree2 = new BSTreeProcedural();
+        myTree2.init(new int[]{-1});
+
+        ITree myTree3 = new BSTreeProcedural();
+        myTree3.init(new int[]{0, 0, 0, 0, 0});
+
+        ITree myTree4 = new BSTreeProcedural();
+
+        return Stream.of(
+                Arguments.arguments(myTree1, 7),
+                Arguments.arguments(myTree2, 1),
+                Arguments.arguments(myTree3, 5),
+                Arguments.arguments(myTree4, 0)
+        );
+    }
+
+    @ParameterizedTest(name = "Size test.")
+    @MethodSource("sizeTest")
+    public void sizeTestMain(ITree myTree, int expected) {
+        int actual = myTree.size();
+        assertEquals(expected, actual);
+    }
+
+    //=================================== to array ======================================
+    static Stream<Arguments> toArrayTest() {
+        ITree myTree1 = new BSTreeProcedural();
+        myTree1.init(new int[]{5, 9, 8, 7, 3, 4, 5});
+
+        ITree myTree2 = new BSTreeProcedural();
+        myTree2.init(new int[]{-1});
+
+        ITree myTree3 = new BSTreeProcedural();
+        myTree3.init(new int[]{0, 0, 0, 0, 0});
+
+        ITree myTree4 = new BSTreeProcedural();
+
+        return Stream.of(
+                Arguments.arguments(myTree1, new int[]{3, 4, 5, 5, 7, 8, 9}),
+                Arguments.arguments(myTree2, new int[]{-1}),
+                Arguments.arguments(myTree3, new int[]{0, 0, 0, 0, 0}),
+                Arguments.arguments(myTree4, new int[]{})
+        );
+    }
+
+    @ParameterizedTest(name = "to Array Test.")
+    @MethodSource("toArrayTest")
+    public void toArrayTestMain(ITree myTree, int[] expected) {
+        myTree.print();
+        int[] actual = myTree.toArray();
+        assertArrayEquals(expected, actual);
+    }
+
+    //=============================================== add ==================================
     static Stream<Arguments> addTest() {
         ITree myTree = new BSTreeProcedural();
         myTree.init(new int[]{300, 100, 200, 700, 750, 725, 150, 350, 400, 500, 900, 50, 175, 225, 650, 600, 375, 75, 25});
@@ -65,5 +136,98 @@ class BSTreeProceduralTest {
         myTree.delete(value);
         int[] actual = myTree.toArray();
         assertArrayEquals(expected, actual);
+    }
+    //============================== nodex ===========================================
+    static Stream<Arguments> getHeightTest() {
+        ITree myTree1 = new BSTreeProcedural();
+        myTree1.init(new int[]{5, 9, 8, 7, 3, 4, 5});
+
+        ITree myTree2 = new BSTreeProcedural();
+        myTree2.init(new int[]{-1});
+
+        ITree myTree3 = new BSTreeProcedural();
+        myTree3.init(new int[]{0, 0, 0, 0, 0});
+
+        ITree myTree4 = new BSTreeProcedural();
+
+        ITree myTree5 = new BSTreeProcedural();
+        myTree5.init(new int[]{15, 33, 7, 10, 11, 8, 5, 4, 6, 25, 22, 27, 38, 35, 40});
+
+        return Stream.of(
+                Arguments.arguments(myTree1, 4),
+                Arguments.arguments(myTree2, 1),
+                Arguments.arguments(myTree3, 5),
+                Arguments.arguments(myTree4, 0),
+                Arguments.arguments(myTree5, 4)
+        );
+    }
+
+    @ParameterizedTest(name = "get Height Test. {0} ,{1}")
+    @MethodSource("getHeightTest")
+    void getHeightTestMain(ITree myTree, int expected) {
+        int actual = myTree.getHeight();
+        assertEquals(expected, actual);
+    }
+    //============================== nodex ===========================================
+    static Stream<Arguments> nodesTest() {
+        ITree myTree1 = new BSTreeProcedural();
+        myTree1.init(new int[]{5, 9, 8, 7, 3, 4, 5});
+
+        ITree myTree2 = new BSTreeProcedural();
+        myTree2.init(new int[]{-1});
+
+        ITree myTree3 = new BSTreeProcedural();
+        myTree3.init(new int[]{0, 0, 0, 0, 0});
+
+        ITree myTree4 = new BSTreeProcedural();
+
+        ITree myTree5 = new BSTreeProcedural();
+        myTree5.init(new int[]{15, 33, 7, 10, 11, 8, 5, 4, 6, 25, 22, 27, 38, 35, 40});
+
+        return Stream.of(
+                Arguments.arguments(myTree1, 5),
+                Arguments.arguments(myTree2, 0),
+                Arguments.arguments(myTree3, 4),
+                Arguments.arguments(myTree4, 0),
+                Arguments.arguments(myTree5, 7)
+        );
+    }
+
+    @ParameterizedTest(name = "Nodes test")
+    @MethodSource("nodesTest")
+    void nodesTestMain(ITree myTree, int expected) {
+        int actual = myTree.nodes();
+        assertEquals(expected, actual);
+    }
+    //============================== leaves ===========================================
+    static Stream<Arguments> leavesTest() {
+        ITree myTree1 = new BSTreeProcedural();
+        myTree1.init(new int[]{5, 9, 8, 7, 3, 4, 5});
+
+        ITree myTree2 = new BSTreeProcedural();
+        myTree2.init(new int[]{-1});
+
+        ITree myTree3 = new BSTreeProcedural();
+        myTree3.init(new int[]{0, 0, 0, 0, 0});
+
+        ITree myTree4 = new BSTreeProcedural();
+
+        ITree myTree5 = new BSTreeProcedural();
+        myTree5.init(new int[]{15, 33, 7, 10, 11, 8, 5, 4, 6, 25, 22, 27, 38, 35, 40});
+
+        return Stream.of(
+                Arguments.arguments(myTree1, 2),
+                Arguments.arguments(myTree2, 1),
+                Arguments.arguments(myTree3, 1),
+                Arguments.arguments(myTree4, 0),
+                Arguments.arguments(myTree5, 8)
+        );
+    }
+
+    @ParameterizedTest(name = "Leaves test")
+    @MethodSource("leavesTest")
+    void leavesTestMain(ITree myTree, int expected) {
+        int actual = myTree.leaves();
+        assertEquals(expected, actual);
     }
 }

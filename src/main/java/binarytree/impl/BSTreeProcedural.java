@@ -4,6 +4,9 @@ import binarytree.ITree;
 import ilist.impl.llist.LList;
 import ilist.interfaces.IList;
 
+import java.util.Arrays;
+import java.util.Stack;
+
 public class BSTreeProcedural implements ITree {
     private Node root;
 
@@ -21,12 +24,42 @@ public class BSTreeProcedural implements ITree {
 
     @Override
     public void clear() {
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            if (node.right != null) {
+                stack.push(node.right);
+                node.right = null;
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+                node.left = null;
+            }
+        }
         root = null;
     }
 
     @Override
     public int size() {
-        return 0;
+        if (root == null) {
+            return 0;
+        }
+        int size = 1;
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            if (node.right != null) {
+                stack.push(node.right);
+                size++;
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+                size++;
+            }
+        }
+        return size;
     }
 
     @Override
@@ -34,9 +67,23 @@ public class BSTreeProcedural implements ITree {
         if (root == null) {
             return new int[]{};
         }
-        IList myList = new LList();
-        toArray(myList, root);
-        return myList.toArray();
+        int[] output = new int[size()];
+        int i = 0;
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            if (node.right != null) {
+                stack.push(node.right);
+            }
+            output[i] = node.value;
+            i++;
+            if (node.left != null) {
+                stack.push(node.left);
+            }
+        }
+        Arrays.sort(output);
+        return output;
     }
 
     @Override
@@ -129,12 +176,49 @@ public class BSTreeProcedural implements ITree {
 
     @Override
     public int getHeight() {
-        return 0;
+        if (root == null) {
+            return 0;
+        }
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        int leftHeight = 1;
+        int rightHeight = 1;
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            if (node.right != null) {
+                rightHeight++;
+                stack.push(node.right);
+            }
+//            if (node.left != null) {
+//                leftHeight++;
+//                stack.push(node.left);
+//
+//            }
+        }
+        return Math.max(leftHeight, rightHeight);
     }
 
     @Override
     public int nodes() {
-        return 0;
+        if (root == null) {
+            return 0;
+        }
+        int count = 0;
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            if (node.right != null || node.left != null) {
+                count++;
+            }
+            if (node.right != null) {
+                stack.push(node.right);
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+            }
+        }
+        return count;
     }
 
     @Override
@@ -143,15 +227,18 @@ public class BSTreeProcedural implements ITree {
             return 0;
         }
         int count = 0;
-        Node leftNode = root.left;
-        while (leftNode != null) {
-            if (leftNode.left == null && leftNode.right == null) {
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            if (node.right == null && node.left == null) {
                 count++;
             }
-            if (leftNode.left != null && leftNode.right == null) {
-                leftNode = leftNode.left;
-            } else if (leftNode.left == null && leftNode.right != null) {
-                leftNode = leftNode.right;
+            if (node.right != null) {
+                stack.push(node.right);
+            }
+            if (node.left != null) {
+                stack.push(node.left);
             }
         }
         return count;
@@ -160,6 +247,21 @@ public class BSTreeProcedural implements ITree {
     @Override
     public void reverse() {
 
+    }
+
+    @Override
+    public String toString() {
+        int[] temp = toArray();
+        int size = size();
+        StringBuilder output = new StringBuilder("[");
+        if (temp.length != 0) {
+            for (int i = 0; i < size - 1; i++) {
+                output.append(temp[i]).append(", ");
+            }
+            output.append(temp[size - 1]);
+        }
+        output.append(']');
+        return output.toString();
     }
 
     private static class Node {
@@ -190,14 +292,4 @@ public class BSTreeProcedural implements ITree {
         }
         return successor;
     }
-
-
-    private void toArray(IList myList, Node node) {
-        if (node != null) {
-            toArray(myList, node.left);
-            myList.add(node.value);
-            toArray(myList, node.right);
-        }
-    }
-
 }

@@ -15,6 +15,9 @@ public class AVLTree implements ITree {
     }
 
     public int rootValue() {
+        if (root == null) {
+            return 0;
+        }
         return root.value;
     }
 
@@ -33,15 +36,10 @@ public class AVLTree implements ITree {
     @Override
     public void clear() {
         clear(root);
+        root = null;
     }
 
-    private void clear(Node node) {
-        if (node != null) {
-            clear(node.left);
-            clear(node.right);
-            node = null;
-        }
-    }
+
 
     @Override
     public int size() {
@@ -49,17 +47,6 @@ public class AVLTree implements ITree {
             return 0;
         }
         return size(root, 1);
-    }
-
-    private int size(Node node, int size) {
-
-        if (node.left != null) {
-            size = size(node.left, ++size);
-        }
-        if (node.right != null) {
-            size = size(node.right, ++size);
-        }
-        return size;
     }
 
     @Override
@@ -226,6 +213,27 @@ public class AVLTree implements ITree {
             this.right = right;
             this.value = value;
         }
+    }
+    private void clear(Node node) {
+        if (node.left != null) {
+            clear(node.left);
+        }
+        node.left = null;
+        if (node.right != null) {
+            clear(node.right);
+        }
+        node.right = null;
+    }
+
+    private int size(Node node, int size) {
+
+        if (node.left != null) {
+            size = size(node.left, ++size);
+        }
+        if (node.right != null) {
+            size = size(node.right, ++size);
+        }
+        return size;
     }
 
     private void toArray(IList myList, Node node) {
