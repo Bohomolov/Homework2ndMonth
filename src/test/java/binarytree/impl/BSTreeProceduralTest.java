@@ -140,7 +140,7 @@ class BSTreeProceduralTest {
     //============================== nodex ===========================================
     static Stream<Arguments> getHeightTest() {
         ITree myTree1 = new BSTreeProcedural();
-        myTree1.init(new int[]{5, 9, 8, 7, 3, 4, 5});
+        myTree1.init(new int[]{5, 9, 8, 7, 3, 4});
 
         ITree myTree2 = new BSTreeProcedural();
         myTree2.init(new int[]{-1});

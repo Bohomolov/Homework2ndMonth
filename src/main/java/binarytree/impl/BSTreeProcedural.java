@@ -1,8 +1,6 @@
 package binarytree.impl;
 
 import binarytree.ITree;
-import ilist.impl.llist.LList;
-import ilist.interfaces.IList;
 
 import java.util.Arrays;
 import java.util.Stack;
@@ -179,22 +177,39 @@ public class BSTreeProcedural implements ITree {
         if (root == null) {
             return 0;
         }
-        Stack<Node> stack = new Stack<>();
-        stack.push(root);
+        Stack<Node> stackRight = new Stack<>();
+        stackRight.push(root);
+
+        Stack<Node> stackLeft = new Stack<>();
+        stackLeft.push(root);
+
         int leftHeight = 1;
         int rightHeight = 1;
-        while (!stack.isEmpty()) {
-            Node node = stack.pop();
-            if (node.right != null) {
-                rightHeight++;
-                stack.push(node.right);
+        while (!stackRight.isEmpty()) {
+            Node node = stackRight.pop();
+            if (node != null) {
+                if (node.right != null) {
+                    rightHeight++;
+                    stackRight.push(node.right);
+                } else if (node.left != null) {
+                    rightHeight++;
+                    stackRight.push(node.left);
+                }
             }
-//            if (node.left != null) {
-//                leftHeight++;
-//                stack.push(node.left);
-//
-//            }
         }
+        while (!stackLeft.isEmpty()) {
+            Node node = stackLeft.pop();
+            if (node != null) {
+                if (node.left != null) {
+                    leftHeight++;
+                    stackLeft.push(node.left);
+                } else if (node.right != null) {
+                    leftHeight++;
+                    stackLeft.push(node.right);
+                }
+            }
+        }
+
         return Math.max(leftHeight, rightHeight);
     }
 
