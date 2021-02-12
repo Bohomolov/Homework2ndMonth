@@ -46,7 +46,7 @@ public class AVLTree implements ITree {
         if (root == null) {
             return 0;
         }
-        return size(root, 1);
+        return size(1,root);
     }
 
     @Override
@@ -177,7 +177,6 @@ public class AVLTree implements ITree {
 
     }
 
-
     @Override
     public String toString() {
         int[] temp = toArray();
@@ -225,13 +224,14 @@ public class AVLTree implements ITree {
         node.right = null;
     }
 
-    private int size(Node node, int size) {
+    private int size(int size, Node node) {
 
         if (node.left != null) {
-            size = size(node.left, ++size);
+            size = size(++size, node.left);
         }
+
         if (node.right != null) {
-            size = size(node.right, ++size);
+            size = size(++size, node.right);
         }
         return size;
     }

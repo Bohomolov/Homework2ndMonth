@@ -1,11 +1,7 @@
 package oophomework.device.deviceutilse;
 
 import oophomework.device.Device;
-import oophomework.device.deviceutilse.comporators.ArmComparator;
-import oophomework.device.deviceutilse.comporators.X86Comparator;
 import oophomework.utils.Constants;
-
-import java.util.Arrays;
 
 public class DeviceUtils {
 
@@ -130,22 +126,6 @@ public class DeviceUtils {
                 }
             }
         }
-        return devices;
-    }
-
-    public Device[] sortByArch(Device[] devices, String arch) {
-        if (isCorrectArch(arch)) {
-            throw new IllegalArgumentException(Constants.INCORRECT_ARCH);
-        } else if (devices == null) {
-            throw new IllegalArgumentException(Constants.ARRAY_IS_NULL);
-        }
-
-        if (arch.equalsIgnoreCase("arm")) {
-            Arrays.sort(devices, new ArmComparator());
-        } else {
-            Arrays.sort(devices, new X86Comparator());
-        }
-
         return devices;
     }
 

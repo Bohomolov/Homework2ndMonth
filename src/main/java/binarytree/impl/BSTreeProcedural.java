@@ -22,6 +22,9 @@ public class BSTreeProcedural implements ITree {
 
     @Override
     public void clear() {
+        if (root == null){
+            return;
+        }
         Stack<Node> stack = new Stack<>();
         stack.push(root);
         while (!stack.isEmpty()) {
@@ -164,7 +167,6 @@ public class BSTreeProcedural implements ITree {
             }
             successor.left = current.left;
         }
-
     }
 
     @Override
@@ -189,11 +191,11 @@ public class BSTreeProcedural implements ITree {
             Node node = stackRight.pop();
             if (node != null) {
                 if (node.right != null) {
-                    rightHeight++;
                     stackRight.push(node.right);
-                } else if (node.left != null) {
                     rightHeight++;
+                } else if (node.left != null) {
                     stackRight.push(node.left);
+                    rightHeight++;
                 }
             }
         }
@@ -201,11 +203,11 @@ public class BSTreeProcedural implements ITree {
             Node node = stackLeft.pop();
             if (node != null) {
                 if (node.left != null) {
-                    leftHeight++;
                     stackLeft.push(node.left);
-                } else if (node.right != null) {
                     leftHeight++;
+                } else if (node.right != null) {
                     stackLeft.push(node.right);
+                    leftHeight++;
                 }
             }
         }

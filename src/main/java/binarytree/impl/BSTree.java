@@ -25,6 +25,9 @@ public class BSTree implements ITree {
 
     @Override
     public void clear() {
+        if (root == null) {
+            return;
+        }
         clear(root);
         root = null;
     }
@@ -61,48 +64,67 @@ public class BSTree implements ITree {
     @Override
     public void delete(int value) {
         rootIsNull(root);
+        delete(root, value);
+    }
 
-        Node parentNode = findParentNodeByValue(root, value);
-        if (parentNode == null) {
-            throw new IllegalArgumentException("Value is not found");
+    private void delete(Node node, int value) {
+        if (node.value == value) {
+            if (node.left == null && node.right == null) {
+                if (node == root) {
+                    root = null;
+                    return;
+                }
+                Node parent = getParent(root, node);
+                if (parent.left == node) {
+                    parent.left = null;
+                } else {
+                    parent.right = null;
+                }
+            } else if (node.left == null) {
+                if (node == root) {
+                    root = root.right;
+                    return;
+                }
+                Node parent = getParent(root, node);
+                if (parent.left == node) {
+                    parent.left = node.left;
+                } else {
+                    parent.right = node.left;
+                }
+            } else if (node.right == null) {
+                if (node == root) {
+                    root = root.left;
+                    return;
+                }
+                Node parent = getParent(root, node);
+                if (parent.left == null) {
+                    parent.right = node.right;
+                } else {
+                    parent.left = node.left;
+                }
+            } else {
+                Node successor = getSuccessor(node);
+                if (node == root) {
+                    root = successor;
+                    successor.left = node.left;
+                    return;
+                }
+                Node parent = getParent(root, node);
+                if (parent.left == node) {
+                    parent.left = successor;
+                } else {
+                    parent.right = successor;
+                }
+                successor.left = node.left;
+            }
+            return;
         }
-        boolean isLeftChild = parentNode.left.value == value;
-        Node deleteNode = isLeftChild ? parentNode.left : parentNode.right;
-        if (deleteNode.left == null && deleteNode.right == null) {
-            if (root.value == value) {
-                root = null;
-            } else if (isLeftChild) {
-                parentNode.left = null;
-            } else {
-                parentNode.right = null;
-            }
-        } else if (deleteNode.right == null) {
-            if (root.value == value) {
-                root = root.left;
-            } else if (isLeftChild) {
-                parentNode.left = deleteNode.left;
-            } else {
-                parentNode.right = deleteNode.left;
-            }
-        } else if (deleteNode.left == null) {
-            if (root.value == value) {
-                root = root.right;
-            } else if (isLeftChild) {
-                parentNode.left = deleteNode.right;
-            } else {
-                parentNode.right = deleteNode.right;
-            }
+        if (value < node.value) {
+            delete(node.left, value);
         } else {
-            Node successor = getSuccessor(deleteNode);
-            if (deleteNode == root) {
-                root = successor;
-            } else if (isLeftChild) {
-                parentNode.left = successor;
-            } else {
-                parentNode.right = successor;
-            }
-            successor.left = deleteNode.left;
+            delete(node.right, value);
         }
+
     }
 
     @Override
@@ -255,21 +277,11 @@ public class BSTree implements ITree {
         return successor;
     }
 
-    private Node findParentNodeByValue(Node node, int value) {
-        if (root.value == value) {
-            return root;
+    private Node getParent(Node nodeRoot, Node requiredNode) {
+        if (nodeRoot.left == requiredNode || nodeRoot.right == requiredNode) {
+            return nodeRoot;
         }
-        Node parent = null;
-        if (value == node.right.value) {
-            parent = node;
-        } else if (node.left.value == value) {
-            parent = node;
-        } else if (value < node.value) {
-            findParentNodeByValue(node.left, value);
-        } else {
-            findParentNodeByValue(node.right, value);
-        }
-        return parent;
+        return nodeRoot.value > requiredNode.value ? getParent(nodeRoot.left, requiredNode) : getParent(nodeRoot.right, requiredNode);
     }
 
     private int getHeight(Node node) {
@@ -278,6 +290,7 @@ public class BSTree implements ITree {
         }
         return 1 + Math.max(getHeight(node.left), getHeight(node.right));
     }
+
     private void smallLeftRotation(Node node) {
         if (node != null) {
             if (node.left != null || node.right != null) {
