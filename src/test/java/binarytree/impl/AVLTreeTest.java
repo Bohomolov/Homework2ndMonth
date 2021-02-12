@@ -1,6 +1,8 @@
 package binarytree.impl;
 
 import binarytree.ITree;
+import oophomework.utils.Constants;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -84,20 +86,22 @@ class AVLTreeTest {
     //=============================================== add ==================================
     static Stream<Arguments> addTest() {
         ITree myTree = new AVLTree();
-        myTree.init(new int[]{300, 100, 200, 700, 750, 725, 150, 350, 400, 500, 900, 50, 175, 225, 650, 600, 375, 75, 25});
+//        myTree.init(new int[]{300, 100, 200, 700, 750, 725, 150, 350, 400, 500, 900, 50, 175, 225, 650, 600, 375, 75, 25});
+        myTree.init(new int[]{300, 400, 100, 150, 200, 250, 350, 325, 375, 425});
         return Stream.of(
-                Arguments.arguments(myTree, 0, new int[]{0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
-                Arguments.arguments(myTree, -10, new int[]{-10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
-                Arguments.arguments(myTree, -100, new int[]{-100, -10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
-                Arguments.arguments(myTree, -1000, new int[]{-1000, -100, -10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
-                Arguments.arguments(myTree, -10000, new int[]{-10000, -1000, -100, -10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900})
+                Arguments.arguments(myTree,  new int[]{100,150,200,250,300,325,350,375,400,425})
+//                Arguments.arguments(myTree, 0, new int[]{0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
+//                Arguments.arguments(myTree, -10, new int[]{-10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
+//                Arguments.arguments(myTree, -100, new int[]{-100, -10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
+//                Arguments.arguments(myTree, -1000, new int[]{-1000, -100, -10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
+//                Arguments.arguments(myTree, -10000, new int[]{-10000, -1000, -100, -10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900})
         );
     }
 
     @ParameterizedTest(name = "Add test. {1}, {2}")
     @MethodSource("addTest")
     void addTestMain(ITree myTree, int value, int[] expected) {
-        myTree.add(value);
+//        myTree.add(value);
         int[] actual = myTree.toArray();
         assertArrayEquals(expected, actual);
     }
@@ -136,6 +140,24 @@ class AVLTreeTest {
         int[] actual = myTree.toArray();
         assertArrayEquals(expected, actual);
     }
+
+    @Test
+    public void deleteExceptionTestRootIsNull() {
+        ITree myTree = new AVLTree();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            myTree.delete(1);
+        }, Constants.ARRAY_IS_NULL);
+    }
+
+    @Test
+    public void deleteExceptionTestValueNotFound() {
+        ITree myTree = new AVLTree();
+        myTree.init(new int[]{1, 2, 3, 5, 6, 8});
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            myTree.delete(4);
+        }, Constants.ARRAY_IS_NULL);
+    }
+
     //============================== nodex ===========================================
     static Stream<Arguments> getHeightTest() {
         ITree myTree1 = new AVLTree();
@@ -167,6 +189,7 @@ class AVLTreeTest {
         int actual = myTree.getHeight();
         assertEquals(expected, actual);
     }
+
     //============================== nodex ===========================================
     static Stream<Arguments> nodesTest() {
         ITree myTree1 = new AVLTree();
@@ -198,6 +221,7 @@ class AVLTreeTest {
         int actual = myTree.nodes();
         assertEquals(expected, actual);
     }
+
     //============================== leaves ===========================================
     static Stream<Arguments> leavesTest() {
         ITree myTree1 = new AVLTree();

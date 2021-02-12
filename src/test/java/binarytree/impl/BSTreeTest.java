@@ -1,6 +1,8 @@
 package binarytree.impl;
 
 import binarytree.ITree;
+import oophomework.utils.Constants;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -137,7 +139,25 @@ class BSTreeTest {
         int[] actual = myTree.toArray();
         assertArrayEquals(expected, actual);
     }
-    //============================== nodex ===========================================
+
+    @Test
+    public void deleteExceptionTestRootIsNull() {
+        ITree myTree = new BSTree();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            myTree.delete(1);
+        }, Constants.ARRAY_IS_NULL);
+    }
+
+    @Test
+    public void deleteExceptionTestValueNotFound() {
+        ITree myTree = new BSTree();
+        myTree.init(new int[]{1, 2, 3, 5, 6, 8});
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            myTree.delete(4);
+        }, Constants.ARRAY_IS_NULL);
+    }
+
+    //============================== height ===========================================
     static Stream<Arguments> getHeightTest() {
         ITree myTree1 = new BSTree();
         myTree1.init(new int[]{5, 9, 8, 7, 3, 4});
@@ -168,7 +188,8 @@ class BSTreeTest {
         int actual = myTree.getHeight();
         assertEquals(expected, actual);
     }
-    //============================== nodex ===========================================
+
+    //============================== nodes ===========================================
     static Stream<Arguments> nodesTest() {
         ITree myTree1 = new BSTree();
         myTree1.init(new int[]{5, 9, 8, 7, 3, 4, 5});
@@ -199,6 +220,7 @@ class BSTreeTest {
         int actual = myTree.nodes();
         assertEquals(expected, actual);
     }
+
     //============================== leaves ===========================================
     static Stream<Arguments> leavesTest() {
         ITree myTree1 = new BSTree();
