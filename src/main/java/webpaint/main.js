@@ -1,6 +1,7 @@
 var canvas = document.getElementById("drawingCanvas");
 var ctx = canvas.getContext('2d');
 var myColor = 'black'
+var size = 1;
 
 document.getElementById('color').oninput = function () {
     myColor = this.value;
@@ -11,8 +12,7 @@ canvas.onmousedown = function (event) {
         var x = event.offsetX;
         var y = event.offsetY;
 
-        ctx.fillRect(x - 5, y - 5, 10, 10);
-        ctx.lineWidth = 1;
+        ctx.fillRect(x - 5, y - 5, size, size);
 
         ctx.fillStyle = myColor;
         ctx.fill()
@@ -34,5 +34,5 @@ function saveCanvas() {
 }
 
 function changeThickness(thickness) {
-    ctx.lineWidth = thickness;
+    size = thickness;
 }
