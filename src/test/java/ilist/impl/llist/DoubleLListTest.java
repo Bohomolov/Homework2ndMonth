@@ -12,18 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-class LListDoubleListTest {
+class DoubleLListTest {
     static Stream<Arguments> clearTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(0);
         myList.add(1);
         myList.add(2);
         myList.add(3);
         myList.add(4);
         myList.add(5);
-        IList myList1 = new LListDoubleList();
+        IList myList1 = new DoubleLList();
 
-        IList myList2 = new LListDoubleList();
+        IList myList2 = new DoubleLList();
         myList2.add(1);
 
         return Stream.of(
@@ -45,19 +45,19 @@ class LListDoubleListTest {
 
     //============================================ Size ========================
     static Stream<Arguments> sizeTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(0);
         myList.add(1);
         myList.add(2);
         myList.add(3);
         myList.add(4);
         myList.add(5);
-        IList myList1 = new LListDoubleList();
+        IList myList1 = new DoubleLList();
 
-        IList myList2 = new LListDoubleList();
+        IList myList2 = new DoubleLList();
         myList2.add(1);
 
-        IList myList3 = new LListDoubleList();
+        IList myList3 = new DoubleLList();
         myList3.add(5);
         myList3.add(5);
         myList3.add(5);
@@ -86,7 +86,7 @@ class LListDoubleListTest {
 
     //======================================== getValue ==========================
     static Stream<Arguments> getValueTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(0);
         myList.add(1);
         myList.add(2);
@@ -96,7 +96,7 @@ class LListDoubleListTest {
         myList.add(-5);
         myList.add(-1);
 
-        IList myList2 = new LListDoubleList();
+        IList myList2 = new DoubleLList();
 
         myList2.add(1);
 
@@ -123,7 +123,7 @@ class LListDoubleListTest {
     @Test
     void valueNotFoundTest() {
         assertThrows(IllegalArgumentException.class, () -> {
-            IList myList = new LListDoubleList();
+            IList myList = new DoubleLList();
             myList.add(9);
             myList.add(7);
             myList.getValue(5);
@@ -132,7 +132,7 @@ class LListDoubleListTest {
 
     //====================================== get ===============================
     static Stream<Arguments> getTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(0);
         myList.add(1);
         myList.add(2);
@@ -166,7 +166,7 @@ class LListDoubleListTest {
 
     @Test
     void incorrectIndexAbsentValue() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(7);
         myList.add(9);
         myList.add(0);
@@ -188,7 +188,7 @@ class LListDoubleListTest {
 
     //====================================== add ===============================
     static Stream<Arguments> addTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         return Stream.of(
                 Arguments.arguments(myList, 5, new int[]{5}, true),
                 Arguments.arguments(myList, 1, new int[]{5, 1}, true),
@@ -211,7 +211,7 @@ class LListDoubleListTest {
 
     //========================== add at index ==============================
     static Stream<Arguments> addAtIndexTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
 
         return Stream.of(
                 Arguments.arguments(myList, 0, 5, new int[]{5}, true),
@@ -241,7 +241,7 @@ class LListDoubleListTest {
 
     // ===================================== remove =============================
     static Stream<Arguments> removeTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(0);
         myList.add(-1);
         myList.add(-18);
@@ -272,14 +272,14 @@ class LListDoubleListTest {
     @Test
     void isRootEmptyTestRemove() {
         assertThrows(IllegalArgumentException.class, () -> {
-            IList myList = new LListDoubleList();
+            IList myList = new DoubleLList();
             myList.remove(5);
         }, "root is null");
     }
 
     @Test
     void incorrectIndexRemoveNegative() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         assertThrows(IllegalArgumentException.class, () -> {
             myList.remove(-1);
         }, "value is absent");
@@ -287,7 +287,7 @@ class LListDoubleListTest {
 
     //================================== remove by index =================================
     static Stream<Arguments> removeByIndexTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(0);
         myList.add(-1);
         myList.add(-18);
@@ -317,7 +317,7 @@ class LListDoubleListTest {
 
     @Test
     void incorrectIndexRemoveByIndNegative() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         assertThrows(IllegalArgumentException.class, () -> {
             myList.removeByIndex(-1);
         }, "");
@@ -325,7 +325,7 @@ class LListDoubleListTest {
 
     @Test
     void incorrectIndexRemoveByIndExtra() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         assertThrows(IllegalArgumentException.class, () -> {
             myList.removeByIndex(5);
         }, "");
@@ -333,7 +333,7 @@ class LListDoubleListTest {
 
     //=========================== contains =========================
     static Stream<Arguments> containsTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(0);
         myList.add(5);
         myList.add(6);
@@ -344,7 +344,7 @@ class LListDoubleListTest {
         myList.add(-20);
         myList.add(-2200);
 
-        IList l2 = new LListDoubleList();
+        IList l2 = new DoubleLList();
         return Stream.of(
                 Arguments.arguments(myList, 0, true),
                 Arguments.arguments(myList, -2200, true),
@@ -370,7 +370,7 @@ class LListDoubleListTest {
 
     //=================================== set ========================================
     static Stream<Arguments> setTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(0);
         myList.add(5);
         myList.add(6);
@@ -412,8 +412,8 @@ class LListDoubleListTest {
 
     //========================= to string ================================
     static Stream<Arguments> toStringTest() {
-        IList myList = new LListDoubleList();
-        IList myList2 = new LListDoubleList();
+        IList myList = new DoubleLList();
+        IList myList2 = new DoubleLList();
         myList.add(0);
         myList.add(1);
         myList.add(2);
@@ -433,14 +433,14 @@ class LListDoubleListTest {
 
     //=================================== to Array=======================================
     static Stream<Arguments> toArrayTest() {
-        IList myList = new LListDoubleList();
-        IList myList2 = new LListDoubleList();
+        IList myList = new DoubleLList();
+        IList myList2 = new DoubleLList();
         myList.add(0);
         myList.add(1);
         myList.add(2);
         myList.add(3);
 
-        IList myList3 = new LListDoubleList();
+        IList myList3 = new DoubleLList();
         myList3.add(0);
         myList3.add(1);
         myList3.add(2);
@@ -478,7 +478,7 @@ class LListDoubleListTest {
 
     //============================== remove all ===================================
     static Stream<Arguments> removeAllTest() {
-        IList myList = new LListDoubleList();
+        IList myList = new DoubleLList();
         myList.add(0);
         myList.add(1);
         myList.add(2);
@@ -501,7 +501,7 @@ class LListDoubleListTest {
     @Test
     void isRootEmptyTestRemoveAll() {
         assertThrows(IllegalArgumentException.class, () -> {
-            IList myList = new LListDoubleList();
+            IList myList = new DoubleLList();
             int[] ints = {1, 5, 6};
             myList.removeAll(ints);
         }, "root is empty");
@@ -510,7 +510,7 @@ class LListDoubleListTest {
     @Test
     void isValueAbsentTestRemoveAll() {
         assertThrows(IllegalArgumentException.class, () -> {
-            IList myList = new LListDoubleList();
+            IList myList = new DoubleLList();
             myList.add(10);
             int[] ints = {1, 5, 6};
             myList.removeAll(ints);

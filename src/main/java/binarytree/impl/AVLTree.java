@@ -39,8 +39,6 @@ public class AVLTree implements ITree {
         root = null;
     }
 
-
-
     @Override
     public int size() {
         if (root == null) {
@@ -289,24 +287,14 @@ public class AVLTree implements ITree {
         Node rotation = node.right;
         node.right = rotation.left;
         rotation.left = node;
-        if (node == root) {
-            root = rotation;
-        } else {
-            Node parent = getParent(root, node);
-            parent.right = rotation;
-        }
+
     }
 
     private void smallRightRotation(Node node) {
         Node rotation = node.left;
         node.left = rotation.right;
         rotation.right = node;
-        if (node == root) {
-            root = rotation;
-        } else {
-            Node parent = getParent(root, node);
-            parent.left = rotation;
-        }
+
     }
 
     private void bigRotateLeft(Node node) {

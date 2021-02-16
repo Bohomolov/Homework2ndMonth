@@ -2,20 +2,20 @@ package ilist.impl.llist;
 
 import ilist.interfaces.IList;
 
-public class LListDoubleList implements IList {
+public class DoubleLList implements IList {
     private Node root;
     private Node crown;
     private int size;
     private final int startIndex = 0;
 
 
-    public LListDoubleList() {
+    public DoubleLList() {
         crown = null;
         root = null;
         size = 0;
     }
 
-    public LListDoubleList(int[] ints) {
+    public DoubleLList(int[] ints) {
         addAll(ints);
     }
 
@@ -24,6 +24,14 @@ public class LListDoubleList implements IList {
         root = null;
         crown = null;
         size = 0;
+    }
+
+    @Override
+    public void init(int[] array) {
+        for (int i : array
+        ) {
+            add(i);
+        }
     }
 
     @Override

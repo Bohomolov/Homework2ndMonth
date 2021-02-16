@@ -49,6 +49,13 @@ public class LList implements IList {
         }
         return true;
     }
+    @Override
+    public void init(int[] array) {
+        for (int i:array
+        ) {
+            add(i);
+        }
+    }
 
     @Override
     public boolean add(int index, int value) {

@@ -1,6 +1,8 @@
 package ilist.interfaces;
 
 public interface IList {
+    void init(int[] array);
+
     void clear();
 
     int size();

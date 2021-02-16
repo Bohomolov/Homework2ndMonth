@@ -127,6 +127,7 @@ public class AListGenerics<E> implements IListGenerics<E> {
         return true;
     }
 
+
     private void extendArray() {
         if (size == objects.length - 1) {
             Object[] temp = objects;

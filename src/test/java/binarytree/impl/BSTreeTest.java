@@ -69,8 +69,11 @@ class BSTreeTest {
 
         ITree myTree4 = new BSTree();
 
+        ITree myTree5 = new BSTree();
+        myTree5.init(new int[]{5, 4, 6, 3});
         return Stream.of(
                 Arguments.arguments(myTree1, new int[]{3, 4, 5, 5, 7, 8, 9}),
+                Arguments.arguments(myTree5, new int[]{3,4,5,6}),
                 Arguments.arguments(myTree2, new int[]{-1}),
                 Arguments.arguments(myTree3, new int[]{0, 0, 0, 0, 0}),
                 Arguments.arguments(myTree4, new int[]{})

@@ -87,10 +87,28 @@ class AVLTreeTest {
     static Stream<Arguments> addTest() {
         ITree myTree = new AVLTree();
 //        myTree.init(new int[]{300, 100, 200, 700, 750, 725, 150, 350, 400, 500, 900, 50, 175, 225, 650, 600, 375, 75, 25});
-        myTree.init(new int[]{300, 400, 100, 150, 200, 250, 350, 325, 375, 425});
+//        myTree.init(new int[]{300, 400, 100, 150, 200, 250, 350, 325, 375, 425});
+        myTree.add(300);
+        myTree.add(100);
+        myTree.add(200);
+        myTree.add(700);
+        myTree.add(750);
+        myTree.add(725);
+        myTree.add(150);
+        myTree.add(350);
+        myTree.add(400);
+        myTree.add(500);
+        myTree.add(900);
+        myTree.add(50);
+        myTree.add(175);
+        myTree.add(225);
+        myTree.add(650);
+        myTree.print();
+
+
         return Stream.of(
-                Arguments.arguments(myTree,  new int[]{100,150,200,250,300,325,350,375,400,425})
-//                Arguments.arguments(myTree, 0, new int[]{0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
+                Arguments.arguments(myTree,  new int[]{ 50,  100, 150, 175, 200, 225, 300, 350, 375, 400, 500,  650, 700, 725, 750, 900})
+//                Arguments.arguments(myTree, 0, new int[]{ 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
 //                Arguments.arguments(myTree, -10, new int[]{-10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
 //                Arguments.arguments(myTree, -100, new int[]{-100, -10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
 //                Arguments.arguments(myTree, -1000, new int[]{-1000, -100, -10, 0, 25, 50, 75, 100, 150, 175, 200, 225, 300, 350, 375, 400, 500, 600, 650, 700, 725, 750, 900}),
@@ -98,9 +116,9 @@ class AVLTreeTest {
         );
     }
 
-    @ParameterizedTest(name = "Add test. {1}, {2}")
+    @ParameterizedTest(name = "Add test.")
     @MethodSource("addTest")
-    void addTestMain(ITree myTree, int value, int[] expected) {
+    void addTestMain(ITree myTree, int[] expected) {
 //        myTree.add(value);
         int[] actual = myTree.toArray();
         assertArrayEquals(expected, actual);

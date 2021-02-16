@@ -32,6 +32,14 @@ public class AListInt implements IList {
     }
 
     @Override
+    public void init(int[] array) {
+        for (int i:array
+             ) {
+            add(i);
+        }
+    }
+
+    @Override
     public void clear() {
         size = 0;
         intArray = new int[capacity];
