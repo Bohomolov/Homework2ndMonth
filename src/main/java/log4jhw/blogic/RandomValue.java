@@ -9,7 +9,10 @@ public class RandomValue {
     private final Random random = new Random();
     private final static Logger logger = Logger.getLogger(RandomValue.class);
 
+
+
     public int getRandomValue() {
+
         int randomValue = random.nextInt(11);
         if (randomValue <= 5) {
             try {

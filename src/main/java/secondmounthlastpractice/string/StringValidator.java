@@ -1,6 +1,7 @@
 package secondmounthlastpractice.string;
 
 public class StringValidator {
+    private static final String REGEX = "()\\[\\]{}";
 
     public boolean isStringCorrect(String string) {
 
@@ -13,7 +14,7 @@ public class StringValidator {
         }
 
         String validationString = string;
-        validationString = validationString.replaceAll("[()\\[\\]{}]", "");
+        validationString = validationString.replaceAll(REGEX, "");
 
         if (validationString.length() > 0) {
             return false;
@@ -23,17 +24,16 @@ public class StringValidator {
 
         for (int i = 0; i < string.length(); i++) {
             char symbol = string.charAt(i);
-            if (symbol == '(' ||symbol == '{' || symbol == '[') {
+            if (symbol == '(' || symbol == '{' || symbol == '[') {
                 result = charValidation(symbol, i, string);
             }
         }
 
         return result;
-
     }
 
     private boolean charValidation(char symbol, int index, String string) {
-        if (index == string.length()){
+        if (index == string.length()) {
             return false;
         }
         char currentChar = string.charAt(index);
@@ -44,6 +44,6 @@ public class StringValidator {
         } else if (symbol == '{' && currentChar == '}') {
             return true;
         }
-        return charValidation(symbol, index +1, string);
+        return charValidation(symbol, index + 1, string);
     }
 }
